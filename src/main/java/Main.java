@@ -1,60 +1,108 @@
-import java.sql.*;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Map;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
-import static spark.Spark.*;
-import spark.template.freemarker.FreeMarkerEngine;
-import spark.ModelAndView;
-import static spark.Spark.get;
+public class Main extends HttpServlet {
+    //For debugging purposes.
+    public static String getStackTrace(Throwable aThrowable) {
+        final Writer result = new StringWriter();
+        final PrintWriter printWriter = new PrintWriter(result);
+        aThrowable.printStackTrace(printWriter);
+        return result.toString();
+    }
 
-import com.heroku.sdk.jdbc.DatabaseUrl;
+    //Function that does the connecting. This is always called on any clal to the API
+    private static Connection getConnection(HttpServletResponse response) throws IOException {
+        try {
+            URI dbUri = new URI(System.getenv("DATABASE_URL"));
+            String username = dbUri.getUserInfo().split(":")[0];
+            String password = dbUri.getUserInfo().split(":")[1];
+            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
+            return DriverManager.getConnection(dbUrl, username, password);
+        } catch (URISyntaxException | SQLException e) {
+            response.setStatus(Constants.INTERNAL_SERVER_ERROR);
+            //response.getWriter().print(Constants.DB_CONNECTION_FAIL);
+            return null;
+        }
+    }
 
-public class Main {
+    //Main function
+    public static void main(String[] args) throws Exception {
+        Server server = new Server(Integer.valueOf(System.getenv("PORT")));
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/");
+        server.setHandler(context);
+        context.addServlet(new ServletHolder(new Main()), "/*");
+        server.start();
+        server.join();
+    }
 
-  public static void main(String[] args) {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        try {
+            //If a GET HTTP request is sent, this function is called.
+            Connection connection = getConnection(response);
+            if (connection != null) {
+                //if a connection is successfully made, parse the URI and call functions based on the parsed URI
+                String path = request.getRequestURI();
+                String[] pathPieces = path.split("/");
+                try {
+                    connection.close();
+                } catch (SQLException ignored) {
+                }
+            }
+        } catch (Exception e) {
+            response.setStatus(401);
+        }
+    }
 
-    port(Integer.valueOf(System.getenv("PORT")));
-    staticFileLocation("/public");
-
-    get("/hello", (req, res) -> "Hello World");
-
-    get("/", (request, response) -> {
-            Map<String, Object> attributes = new HashMap<>();
-            attributes.put("message", "Hello World!");
-
-            return new ModelAndView(attributes, "index.ftl");
-        }, new FreeMarkerEngine());
-
-    get("/db", (req, res) -> {
-      Connection connection = null;
-      Map<String, Object> attributes = new HashMap<>();
-      try {
-        connection = DatabaseUrl.extract().getConnection();
-
-        Statement stmt = connection.createStatement();
-        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
-        stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-        ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
-
-        ArrayList<String> output = new ArrayList<String>();
-        while (rs.next()) {
-          output.add( "Read from DB: " + rs.getTimestamp("tick"));
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        //If a POST HTTP request is sent, this function is called.
+        // Get request body into string
+        StringBuilder requestBody = new StringBuilder();
+        String line;
+        try {
+            BufferedReader reader = request.getReader();
+            while ((line = reader.readLine()) != null) {
+                requestBody.append(line);
+            }
+        } catch (IOException e) {
+            return;
         }
 
-        attributes.put("results", output);
-        return new ModelAndView(attributes, "db.ftl");
-      } catch (Exception e) {
-        attributes.put("message", "There was an error: " + e);
-        return new ModelAndView(attributes, "error.ftl");
-      } finally {
-        if (connection != null) try{connection.close();} catch(SQLException e){}
-      }
-    }, new FreeMarkerEngine());
-
-  }
-
+        // Get connection to DB
+        Connection connection = getConnection(response);
+        if (connection != null) {
+            // Business logic
+            //If the connection is successfully made, parse URI and call functions based on that
+            try {
+                JSONObject jsonObject = new JSONObject(requestBody.toString());
+                String path = request.getRequestURI();
+                String[] pathPieces = path.split("/");
+            } catch (JSONException e) {
+                return;
+            } finally {
+                try {
+                    connection.close();
+                } catch (SQLException ignored) {
+                }
+            }
+        }
+    }
 }
