@@ -10,6 +10,10 @@ public class Constants {
     public static final String URL = "Url";
     public static final String FROM_NUMBER = "(650) 285-1269";
 
+    //for the JSON
+    public static final String RECEIVER_NUMBER_KEY = "number";
+
+
     public static final int BAD_REQUEST = 400;
     public static final int UNATHORIZED = 401;
     public static final int NOT_FOUND = 404;
