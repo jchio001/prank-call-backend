@@ -16,6 +16,67 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Main extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            //If a GET HTTP request is sent, this function is called.
+            Connection connection = getConnection(response);
+            if (connection != null) {
+                //if a connection is successfully made, parse the URI and call functions based on the parsed URI
+                String path = request.getRequestURI();
+                String[] pathPieces = path.split("/");
+                try {
+                    connection.close();
+                } catch (SQLException ignored) {
+                }
+            }
+        } catch (Exception e) {
+            response.setStatus(401);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        //If a POST HTTP request is sent, this function is called.
+        // Get request body into string
+        StringBuilder requestBody = new StringBuilder();
+        String line;
+        try {
+            BufferedReader reader = request.getReader();
+            while ((line = reader.readLine()) != null) {
+                requestBody.append(line);
+            }
+        } catch (IOException e) {
+            response.setStatus(Constants.INTERNAL_SERVER_ERROR);
+            return;
+        }
+
+        // Get connection to DB
+        Connection connection = getConnection(response);
+        if (connection != null) {
+            // Business logic
+            //If the connection is successfully made, parse URI and call functions based on that
+            try {
+                JSONObject jsonObject = new JSONObject(requestBody.toString());
+                String path = request.getRequestURI();
+                String[] pathPieces = path.split("/");
+                if (pathPieces[1].equals("call")) {
+                    MakeCall.makeCall(request, response, connection, jsonObject);
+                }
+
+            } catch (JSONException e) {
+                return;
+            } finally {
+                try {
+                    connection.close();
+                } catch (SQLException ignored) {
+                }
+            }
+        }
+    }
+
     //For debugging purposes.
     public static String getStackTrace(Throwable aThrowable) {
         final Writer result = new StringWriter();
@@ -48,61 +109,5 @@ public class Main extends HttpServlet {
         context.addServlet(new ServletHolder(new Main()), "/*");
         server.start();
         server.join();
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-        try {
-            //If a GET HTTP request is sent, this function is called.
-            Connection connection = getConnection(response);
-            if (connection != null) {
-                //if a connection is successfully made, parse the URI and call functions based on the parsed URI
-                String path = request.getRequestURI();
-                String[] pathPieces = path.split("/");
-                try {
-                    connection.close();
-                } catch (SQLException ignored) {
-                }
-            }
-        } catch (Exception e) {
-            response.setStatus(401);
-        }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-        //If a POST HTTP request is sent, this function is called.
-        // Get request body into string
-        StringBuilder requestBody = new StringBuilder();
-        String line;
-        try {
-            BufferedReader reader = request.getReader();
-            while ((line = reader.readLine()) != null) {
-                requestBody.append(line);
-            }
-        } catch (IOException e) {
-            return;
-        }
-
-        // Get connection to DB
-        Connection connection = getConnection(response);
-        if (connection != null) {
-            // Business logic
-            //If the connection is successfully made, parse URI and call functions based on that
-            try {
-                JSONObject jsonObject = new JSONObject(requestBody.toString());
-                String path = request.getRequestURI();
-                String[] pathPieces = path.split("/");
-            } catch (JSONException e) {
-                return;
-            } finally {
-                try {
-                    connection.close();
-                } catch (SQLException ignored) {
-                }
-            }
-        }
     }
 }
