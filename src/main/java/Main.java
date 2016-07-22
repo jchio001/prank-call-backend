@@ -64,7 +64,7 @@ public class Main extends HttpServlet {
                 String path = request.getRequestURI();
                 String[] pathPieces = path.split("/");
                 if (pathPieces[1].equals("call")) {
-                    MakeCall.makeCall(request, response, connection);
+                    MakeCall.makeCall(request, response, connection, jsonObject);
                 }
 
             } catch (JSONException | TwilioRestException e) {
