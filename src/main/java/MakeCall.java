@@ -16,7 +16,7 @@ import java.util.Map;
  * Created by Jonathan Chiou on 7/22/2016.
  */
 public class MakeCall {
-    public static void makeCall(HttpServletRequest req, HttpServletResponse resp, Connection connection, JSONObject jsonObject)
+    public static void makeCall(HttpServletRequest req, HttpServletResponse resp, Connection connection)
             throws IOException, TwilioRestException {
         TwilioRestClient client = new TwilioRestClient(Constants.ACCOUNT_SID, Constants.AUTH_TOKEN);
         Account account = client.getAccount();

@@ -60,11 +60,11 @@ public class Main extends HttpServlet {
             // Business logic
             //If the connection is successfully made, parse URI and call functions based on that
             try {
-                JSONObject jsonObject = new JSONObject(requestBody.toString());
+                //JSONObject jsonObject = new JSONObject(requestBody.toString());
                 String path = request.getRequestURI();
                 String[] pathPieces = path.split("/");
                 if (pathPieces[1].equals("call")) {
-                    MakeCall.makeCall(request, response, connection, jsonObject);
+                    MakeCall.makeCall(request, response, connection);
                 }
 
             } catch (JSONException | TwilioRestException e) {
