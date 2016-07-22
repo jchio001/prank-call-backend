@@ -67,7 +67,7 @@ public class Main extends HttpServlet {
                     MakeCall.makeCall(request, response, connection);
                 }
 
-            } catch (JSONException | TwilioRestException e) {
+            } catch (TwilioRestException e) {
                 response.setStatus(Constants.BAD_REQUEST);
                 return;
             } finally {
