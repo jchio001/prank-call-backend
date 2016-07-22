@@ -1,3 +1,4 @@
+import com.twilio.sdk.TwilioRestException;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -66,7 +67,8 @@ public class Main extends HttpServlet {
                     MakeCall.makeCall(request, response, connection, jsonObject);
                 }
 
-            } catch (JSONException e) {
+            } catch (JSONException | TwilioRestException e) {
+                response.setStatus(Constants.BAD_REQUEST);
                 return;
             } finally {
                 try {
