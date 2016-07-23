@@ -69,6 +69,7 @@ public class Main extends HttpServlet {
 
             } catch (JSONException | TwilioRestException e) {
                 response.setStatus(Constants.BAD_REQUEST);
+                getStackTrace();
                 return;
             } finally {
                 try {
