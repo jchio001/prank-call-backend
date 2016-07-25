@@ -15,6 +15,9 @@ public class Constants {
     //for the JSON
     public static final String RECEIVER_NUMBER_KEY = "number";
 
+    //creating account JSON
+    public static final String PHONE_NUMBER = "phone_number";
+    public static final String PASSWORD = "password";
 
     public static final int BAD_REQUEST = 400;
     public static final int UNATHORIZED = 401;

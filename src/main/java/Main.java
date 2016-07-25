@@ -66,6 +66,9 @@ public class Main extends HttpServlet {
                 if (pathPieces[1].equals("call")) {
                     MakeCall.makeCall(request, response, connection, jsonObject);
                 }
+                if (pathPieces[1].equals("createAccount")) {
+                    MakeCall.makeCall(request, response, connection, jsonObject);
+                }
 
             } catch (JSONException | TwilioRestException e) {
                 response.setStatus(Constants.BAD_REQUEST);
