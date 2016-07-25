@@ -8,6 +8,8 @@ public class Constants {
     public static final String TO = "To";
     public static final String FROM = "From";
     public static final String URL = "Url";
+    public static final String GET = "Get";
+    public static final String METHOD = "Method";
     public static final String FROM_NUMBER = "(650) 285-1269";
 
     //for the JSON

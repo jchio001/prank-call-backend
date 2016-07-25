@@ -26,6 +26,7 @@ public class MakeCall {
         Map<String, String> callParams = new HashMap<>();
         callParams.put(Constants.TO, receiverNumber);
         callParams.put(Constants.FROM, Constants.FROM_NUMBER);
+        callParams.put(Constants.METHOD, Constants.GET);
         callParams.put(Constants.URL, "https://raw.githubusercontent.com/jchio001/TwilioXML/master/Response.xml");
         Call call = callFactory.create(callParams);
     }
