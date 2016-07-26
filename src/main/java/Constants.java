@@ -29,6 +29,9 @@ public class Constants {
     //confirmation msg strings
     public static final String MSG = "Your verification number is \n";
 
+    //ResultSet Strings
+    public static final String ACCOUNT__ACTIVE = "account__active";
+
     public static final int BAD_REQUEST = 400;
     public static final int UNATHORIZED = 401;
     public static final int NOT_FOUND = 404;
