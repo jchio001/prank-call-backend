@@ -19,6 +19,9 @@ public class Constants {
     public static final String PHONE_NUMBER = "phone_number";
     public static final String PASSWORD = "password";
 
+    //login
+    public static final String ID = "id";
+
     public static final int BAD_REQUEST = 400;
     public static final int UNATHORIZED = 401;
     public static final int NOT_FOUND = 404;
