@@ -1,5 +1,3 @@
-import com.sun.corba.se.impl.orbutil.closure.Constant;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import com.twilio.sdk.TwilioRestException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,10 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static javax.swing.UIManager.getInt;
 
 public class ActivateAccount {
-    public static void createAccount(HttpServletRequest req, HttpServletResponse resp, Connection connection, JSONObject jsonObject)
+    public static void activateAccount(HttpServletRequest req, HttpServletResponse resp, Connection connection, JSONObject jsonObject)
             throws IOException, TwilioRestException {
         try {
             int phoneNumber = jsonObject.getInt(Constants.PHONE_NUMBER);
