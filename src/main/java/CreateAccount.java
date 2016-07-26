@@ -9,10 +9,7 @@ import org.json.JSONObject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -31,7 +28,7 @@ public class CreateAccount {
 
             String insertSQL = "INSERT into account (account__phone_number, account__password, account__confirm_key) " +
                     "VALUES (?, ?, ?)";
-            PreparedStatement stmt = connection.prepareStatement(insertSQL);
+            PreparedStatement stmt = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, phoneNumber);
             stmt.setString(2, password);
             stmt.setInt(3, confirmKey);
