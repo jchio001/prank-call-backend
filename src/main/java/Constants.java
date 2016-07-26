@@ -23,6 +23,9 @@ public class Constants {
     //login
     public static final String ID = "id";
 
+    //activation
+    public static final String KEY = "key";
+
     //confirmation msg strings
     public static final String MSG = "Please open the link to confirm creating your account.\n";
 

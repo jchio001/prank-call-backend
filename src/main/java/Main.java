@@ -20,9 +20,9 @@ public class Main extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        Connection connection = getConnection(response);
         try {
             //If a GET HTTP request is sent, this function is called.
-            Connection connection = getConnection(response);
             if (connection != null) {
                 //if a connection is successfully made, parse the URI and call functions based on the parsed URI
                 String path = request.getRequestURI();
@@ -33,7 +33,12 @@ public class Main extends HttpServlet {
                 }
             }
         } catch (Exception e) {
-            response.setStatus(401);
+            response.setStatus(Constants.INTERNAL_SERVER_ERROR);
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException ignored) {
+            }
         }
     }
 

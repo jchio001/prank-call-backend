@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class CreateAccount {
     public static void createAccount(HttpServletRequest req, HttpServletResponse resp, Connection connection, JSONObject jsonObject)
@@ -25,19 +26,23 @@ public class CreateAccount {
                 throw new JSONException("Empty phone number.");
             }
 
+            Random random = new Random();
             String password = jsonObject.getString(Constants.PASSWORD);
-            String insertSQL = "INSERT into accounts (account__phone_number, password) VALUES " +
-                    "(?, ?)";
+            int confirmKey = genConfirmKey(random);
+
+            String insertSQL = "INSERT into accounts (account__phone_number, account__password, account__confirm_key) " +
+                    "VALUES (?, ?, ?)";
             PreparedStatement stmt = connection.prepareStatement(insertSQL);
             stmt.setString(1, phoneNumber);
             stmt.setString(2, password);
+            stmt.setInt(3, confirmKey);
             resp.getWriter().print(executeQueryGetId(stmt, resp));
 
             TwilioRestClient client = new TwilioRestClient(Constants.ACCOUNT_SID, Constants.AUTH_TOKEN);
             List<org.apache.http.NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair(Constants.TO, phoneNumber));
             params.add(new BasicNameValuePair(Constants.FROM, Constants.FROM_NUMBER));
-            params.add(new BasicNameValuePair(Constants.BODY, Constants.MSG));
+            params.add(new BasicNameValuePair(Constants.BODY, Constants.MSG + Integer.toString(confirmKey)));
 
             MessageFactory messageFactory = client.getAccount().getMessageFactory();
             Message msg = messageFactory.create(params);
@@ -48,6 +53,10 @@ public class CreateAccount {
         catch (SQLException e) {
             resp.setStatus(Constants.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public static int genConfirmKey(Random random) {
+        return random.nextInt(8999) + 1111;
     }
 
     public static String executeQueryGetId(PreparedStatement stmt, HttpServletResponse resp) throws SQLException, JSONException{
