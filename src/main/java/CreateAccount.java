@@ -33,7 +33,7 @@ public class CreateAccount {
             String insertSQL = "INSERT into accounts (account__phone_number, account__password, account__confirm_key) " +
                     "VALUES (?, ?, ?)";
             PreparedStatement stmt = connection.prepareStatement(insertSQL);
-            stmt.setInt(1, Integer.parseInt(phoneNumber));
+            stmt.setString(1, phoneNumber);
             stmt.setString(2, password);
             stmt.setInt(3, confirmKey);
             resp.getWriter().print(executeQueryGetId(stmt, resp));
