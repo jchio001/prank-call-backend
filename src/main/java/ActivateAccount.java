@@ -15,26 +15,23 @@ public class ActivateAccount {
     public static void activateAccount(HttpServletRequest req, HttpServletResponse resp, Connection connection, JSONObject jsonObject)
             throws IOException, TwilioRestException {
         try {
-            int phoneNumber = jsonObject.getInt(Constants.PHONE_NUMBER);
+            String phoneNumber = jsonObject.getString(Constants.PHONE_NUMBER);
+            String password = jsonObject.getString(Constants.PASSWORD);
             int confirmKey = jsonObject.getInt(Constants.KEY);
             if (!(1000 <= confirmKey && confirmKey <= 9999)) {
                 throw new JSONException("Invalid Key");
             }
 
-            String checkKeyQuery = "Select COUNT(*) from account WHERE account__phone_number = ? and " +
-                    "confirmKey = ? LIMIT 1";
-            PreparedStatement stmt = connection.prepareStatement(checkKeyQuery);
-            stmt.setInt(1, phoneNumber);
-            stmt.setInt(2, confirmKey);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                if (rs.getInt(1) != 1) {
-                    resp.setStatus(Constants.BAD_REQUEST);
-                }
-            } else {
-                resp.setStatus(Constants.INTERNAL_SERVER_ERROR);
+            String activateAccQuery = "UPDATE account SET account__active = true WHERE account__phone_number = ? and " +
+                    "account__password = ? and account__confirm_key = ? and account__active = false";
+            PreparedStatement stmt = connection.prepareStatement(activateAccQuery);
+            stmt.setString(1, phoneNumber);
+            stmt.setString(2, password);
+            stmt.setInt(3, confirmKey);
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new JSONException("Invalid credentials");
             }
-
         } catch (JSONException e) {
             resp.setStatus(Constants.BAD_REQUEST);
         } catch (SQLException e) {

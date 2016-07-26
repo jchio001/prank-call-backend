@@ -27,7 +27,7 @@ public class Constants {
     public static final String KEY = "key";
 
     //confirmation msg strings
-    public static final String MSG = "Please open the link to confirm creating your account.\n";
+    public static final String MSG = "Your verification number is \n";
 
     public static final int BAD_REQUEST = 400;
     public static final int UNATHORIZED = 401;
