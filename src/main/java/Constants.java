@@ -7,10 +7,11 @@ public class Constants {
 
     public static final String TO = "To";
     public static final String FROM = "From";
+    public static final String BODY = "Body";
     public static final String URL = "Url";
     public static final String GET = "Get";
     public static final String METHOD = "Method";
-    public static final String FROM_NUMBER = "(650) 285-1269";
+    public static final String FROM_NUMBER = "6502851269";
 
     //for the JSON
     public static final String RECEIVER_NUMBER_KEY = "number";
@@ -21,6 +22,9 @@ public class Constants {
 
     //login
     public static final String ID = "id";
+
+    //confirmation msg strings
+    public static final String MSG = "Please open the link to confirm creating your account.\n";
 
     public static final int BAD_REQUEST = 400;
     public static final int UNATHORIZED = 401;
