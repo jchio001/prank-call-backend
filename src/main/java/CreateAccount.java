@@ -25,7 +25,6 @@ public class CreateAccount {
             if (phoneNumber.isEmpty()) {
                 throw new JSONException("Empty phone number.");
             }
-
             Random random = new Random();
             String password = jsonObject.getString(Constants.PASSWORD);
             int confirmKey = genConfirmKey(random);

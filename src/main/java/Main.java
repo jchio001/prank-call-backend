@@ -76,11 +76,13 @@ public class Main extends HttpServlet {
                     ActivateAccount.activateAccount(request, response, connection, jsonObject);
                 }
 
-            } catch (JSONException | TwilioRestException e) {
+            } catch (JSONException e) {
                 response.setStatus(Constants.BAD_REQUEST);
                 getStackTrace(e);
-                return;
-            } finally {
+            } catch (TwilioRestException e) {
+                response.setStatus(Constants.INTERNAL_SERVER_ERROR);
+                response.getWriter().print("Twilio error.");
+            }finally {
                 try {
                     connection.close();
                 } catch (SQLException ignored) {
