@@ -31,16 +31,13 @@ public class ActivateAccount {
                 if (rs.getInt(1) != 1) {
                     resp.setStatus(Constants.BAD_REQUEST);
                 }
-            }
-            else {
+            } else {
                 resp.setStatus(Constants.INTERNAL_SERVER_ERROR);
             }
 
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             resp.setStatus(Constants.BAD_REQUEST);
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             resp.setStatus(Constants.INTERNAL_SERVER_ERROR);
         }
     }

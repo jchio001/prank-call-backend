@@ -19,7 +19,7 @@ import java.util.Random;
 
 public class CreateAccount {
     public static void createAccount(HttpServletRequest req, HttpServletResponse resp, Connection connection, JSONObject jsonObject)
-            throws IOException, TwilioRestException{
+            throws IOException, TwilioRestException {
         try {
             String phoneNumber = jsonObject.getString(Constants.PHONE_NUMBER);
             if (phoneNumber.isEmpty()) {
@@ -33,7 +33,7 @@ public class CreateAccount {
             String insertSQL = "INSERT into accounts (account__phone_number, account__password, account__confirm_key) " +
                     "VALUES (?, ?, ?)";
             PreparedStatement stmt = connection.prepareStatement(insertSQL);
-            stmt.setString(1, phoneNumber);
+            stmt.setInt(1, Integer.parseInt(phoneNumber));
             stmt.setString(2, password);
             stmt.setInt(3, confirmKey);
             resp.getWriter().print(executeQueryGetId(stmt, resp));
@@ -46,12 +46,12 @@ public class CreateAccount {
 
             MessageFactory messageFactory = client.getAccount().getMessageFactory();
             Message msg = messageFactory.create(params);
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             resp.setStatus(Constants.BAD_REQUEST);
-        }
-        catch (SQLException e) {
+            resp.getWriter().write(Main.getStackTrace(e));
+        } catch (SQLException e) {
             resp.setStatus(Constants.INTERNAL_SERVER_ERROR);
+            resp.getWriter().write(Main.getStackTrace(e));
         }
     }
 
@@ -59,7 +59,7 @@ public class CreateAccount {
         return random.nextInt(8999) + 1111;
     }
 
-    public static String executeQueryGetId(PreparedStatement stmt, HttpServletResponse resp) throws SQLException, JSONException{
+    public static String executeQueryGetId(PreparedStatement stmt, HttpServletResponse resp) throws SQLException, JSONException {
         long id;
         int affectedRows = stmt.executeUpdate();
         if (affectedRows == 0) {
@@ -68,8 +68,7 @@ public class CreateAccount {
         ResultSet generatedKeys = stmt.getGeneratedKeys();
         if (generatedKeys.next()) {
             id = generatedKeys.getLong(1);
-        }
-        else {
+        } else {
             throw new SQLException();
         }
 

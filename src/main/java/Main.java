@@ -70,11 +70,9 @@ public class Main extends HttpServlet {
                 String[] pathPieces = path.split("/");
                 if (pathPieces[1].equals("call")) {
                     MakeCall.makeCall(request, response, connection, jsonObject);
-                }
-                else if (pathPieces[1].equals("createAccount")) {
+                } else if (pathPieces[1].equals("createAccount")) {
                     CreateAccount.createAccount(request, response, connection, jsonObject);
-                }
-                else if (pathPieces[1].equals("activateAccount")) {
+                } else if (pathPieces[1].equals("activateAccount")) {
                     ActivateAccount.activateAccount(request, response, connection, jsonObject);
                 }
 
