@@ -29,7 +29,7 @@ public class CreateAccount {
             String password = jsonObject.getString(Constants.PASSWORD);
             int confirmKey = genConfirmKey(random);
 
-            String insertSQL = "INSERT into accounts (account__phone_number, account__password, account__confirm_key) " +
+            String insertSQL = "INSERT into account (account__phone_number, account__password, account__confirm_key) " +
                     "VALUES (?, ?, ?)";
             PreparedStatement stmt = connection.prepareStatement(insertSQL);
             stmt.setString(1, phoneNumber);
