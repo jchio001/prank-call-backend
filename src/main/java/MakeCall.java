@@ -3,6 +3,7 @@ import com.twilio.sdk.TwilioRestException;
 import com.twilio.sdk.resource.factory.CallFactory;
 import com.twilio.sdk.resource.instance.Account;
 import com.twilio.sdk.resource.instance.Call;
+import org.apache.commons.lang3.time.DateUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,14 +31,23 @@ public class MakeCall {
             if (rs.next()) {
                 //boolean active = rs.getBoolean(Constants.ACCOUNT__ACTIVE);
                 Timestamp timestamp = rs.getTimestamp(Constants.ACCOUNT__LAST_CALL);
+                String updateSQL;
                 if (timestamp != null) {
                     Date lastCallDate = new Date(timestamp.getTime());
-                    resp.getWriter().print(lastCallDate.toString() + "\n");
+                    Date today = new Date();
+                    if (DateUtils.isSameDay(lastCallDate, today)) {
+                        updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP, account__daily_call_cntr " +
+                                "= account__daily_call_cntr + 1 WHERE account__id = ?";
+                    }
+                    else {
+                        updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP, account__daily_call_cntr " +
+                                "= account__daily_call_cntr + 1 WHERE account__id = ?";
+                    }
                 }
-                String updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP, account__daily_call_cntr " +
-                        "= account__daily_call_cntr + 1 WHERE account__id = ?";
-                Date today = new Date();
-                resp.getWriter().print(today.toString());
+                else {
+                    updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP, account__daily_call_cntr " +
+                            "= account__daily_call_cntr + 1 WHERE account__id = ?";
+                }
                 stmt = connection.prepareStatement(updateSQL);
                 stmt.setLong(1, accountId);
                 stmt.executeUpdate();
