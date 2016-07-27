@@ -35,8 +35,11 @@ public class MakeCall {
             if (rs.next()) {
                 boolean active = rs.getBoolean(Constants.ACCOUNT__ACTIVE);
                 if (active) {
-                    Date lastCallDate  = new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString(Constants.ACCOUNT__LAST_CALL));
-                    resp.getWriter().print(lastCallDate);
+                    String dateString = rs.getString(Constants.ACCOUNT__LAST_CALL);
+                    if (!dateString.isEmpty()) {
+                        Date lastCallDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+                        resp.getWriter().print(lastCallDate);
+                    }
                     makeCall(receiverNumber);
                 }
                 else
