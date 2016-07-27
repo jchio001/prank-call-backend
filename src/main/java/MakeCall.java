@@ -32,7 +32,7 @@ public class MakeCall {
                 Timestamp timestamp = rs.getTimestamp(Constants.ACCOUNT__LAST_CALL);
                 boolean isSubbed = rs.getBoolean(Constants.ACCOUNT__SUBBED);
                 int dailyCallCntr = rs.getInt(Constants.ACCOUNT__DAILY_CALL_CNTR);
-                if (!isSubbed && (dailyCallCntr > 3)) {
+                if (!isSubbed && (dailyCallCntr >= 3)) {
                     throw new JSONException("User has exceeded daily call limit");
                 }
                 String updateSQL;
