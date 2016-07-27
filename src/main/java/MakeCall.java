@@ -23,14 +23,18 @@ public class MakeCall {
         String password = jsonObject.getString(Constants.PASSWORD);
 
         try {
-            String getStatusQuery = "Select account__subbed, account__active, account__last_call from account WHERE account__id = ? and account__password = ? LIMIT 1";
+            String getStatusQuery = "Select account__subbed, account__active, account__last_call, account__daily_call_cntr from account WHERE account__id = ? and account__password = ? LIMIT 1";
             PreparedStatement stmt = connection.prepareStatement(getStatusQuery);
             stmt.setLong(1, accountId);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                //boolean active = rs.getBoolean(Constants.ACCOUNT__ACTIVE);
                 Timestamp timestamp = rs.getTimestamp(Constants.ACCOUNT__LAST_CALL);
+                boolean isSubbed = rs.getBoolean(Constants.ACCOUNT__SUBBED);
+                int dailyCallCntr = rs.getInt(Constants.ACCOUNT__DAILY_CALL_CNTR);
+                if (!isSubbed && (dailyCallCntr > 3)) {
+                    throw new JSONException("User has exceeded daily call limit");
+                }
                 String updateSQL;
                 if (timestamp != null) {
                     Date lastCallDate = new Date(timestamp.getTime());
@@ -41,7 +45,7 @@ public class MakeCall {
                     }
                     else {
                         updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP, account__daily_call_cntr " +
-                                "= account__daily_call_cntr + 1 WHERE account__id = ?";
+                                "= 1 WHERE account__id = ?";
                     }
                 }
                 else {

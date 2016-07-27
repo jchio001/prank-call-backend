@@ -33,6 +33,8 @@ public class Constants {
     public static final String ACCOUNT__ID = "account__id";
     public static final String ACCOUNT__ACTIVE = "account__active";
     public static final String ACCOUNT__LAST_CALL = "account__last_call";
+    public static final String ACCOUNT__DAILY_CALL_CNTR = "account__daily_call_cntr";
+    public static final String ACCOUNT__SUBBED = "account__subbed";
 
     public static final int BAD_REQUEST = 400;
     public static final int UNATHORIZED = 401;
