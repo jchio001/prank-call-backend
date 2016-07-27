@@ -52,7 +52,7 @@ public class CreateAccount {
     }
 
     public static int genConfirmKey(Random random) {
-        return random.nextInt(8999) + 1111;
+        return random.nextInt(8999) + 1000;
     }
 
     public static String executeQueryGetId(PreparedStatement stmt, HttpServletResponse resp) throws SQLException, JSONException {
