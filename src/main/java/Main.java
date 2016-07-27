@@ -17,6 +17,40 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Main extends HttpServlet {
+    //For debugging purposes.
+    public static String getStackTrace(Throwable aThrowable) {
+        final Writer result = new StringWriter();
+        final PrintWriter printWriter = new PrintWriter(result);
+        aThrowable.printStackTrace(printWriter);
+        return result.toString();
+    }
+
+    //Function that does the connecting. This is always called on any clal to the API
+    private static Connection getConnection(HttpServletResponse response) throws IOException {
+        try {
+            URI dbUri = new URI(System.getenv("DATABASE_URL"));
+            String username = dbUri.getUserInfo().split(":")[0];
+            String password = dbUri.getUserInfo().split(":")[1];
+            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
+            return DriverManager.getConnection(dbUrl, username, password);
+        } catch (URISyntaxException | SQLException e) {
+            response.setStatus(Constants.INTERNAL_SERVER_ERROR);
+            //response.getWriter().print(Constants.DB_CONNECTION_FAIL);
+            return null;
+        }
+    }
+
+    //Main function
+    public static void main(String[] args) throws Exception {
+        Server server = new Server(Integer.valueOf(System.getenv("PORT")));
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/");
+        server.setHandler(context);
+        context.addServlet(new ServletHolder(new Main()), "/*");
+        server.start();
+        server.join();
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -74,8 +108,7 @@ public class Main extends HttpServlet {
                     CreateAccount.createAccount(request, response, connection, jsonObject);
                 } else if (pathPieces[1].equals("activateAccount")) {
                     ActivateAccount.activateAccount(request, response, connection, jsonObject);
-                }
-                else if (pathPieces[1].equals("login")) {
+                } else if (pathPieces[1].equals("login")) {
                     Login.login(request, response, connection, jsonObject);
                 }
             } catch (JSONException e) {
@@ -84,46 +117,12 @@ public class Main extends HttpServlet {
             } catch (TwilioRestException e) {
                 response.setStatus(Constants.INTERNAL_SERVER_ERROR);
                 response.getWriter().print("Twilio error.");
-            }finally {
+            } finally {
                 try {
                     connection.close();
                 } catch (SQLException ignored) {
                 }
             }
         }
-    }
-
-    //For debugging purposes.
-    public static String getStackTrace(Throwable aThrowable) {
-        final Writer result = new StringWriter();
-        final PrintWriter printWriter = new PrintWriter(result);
-        aThrowable.printStackTrace(printWriter);
-        return result.toString();
-    }
-
-    //Function that does the connecting. This is always called on any clal to the API
-    private static Connection getConnection(HttpServletResponse response) throws IOException {
-        try {
-            URI dbUri = new URI(System.getenv("DATABASE_URL"));
-            String username = dbUri.getUserInfo().split(":")[0];
-            String password = dbUri.getUserInfo().split(":")[1];
-            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
-            return DriverManager.getConnection(dbUrl, username, password);
-        } catch (URISyntaxException | SQLException e) {
-            response.setStatus(Constants.INTERNAL_SERVER_ERROR);
-            //response.getWriter().print(Constants.DB_CONNECTION_FAIL);
-            return null;
-        }
-    }
-
-    //Main function
-    public static void main(String[] args) throws Exception {
-        Server server = new Server(Integer.valueOf(System.getenv("PORT")));
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/");
-        server.setHandler(context);
-        context.addServlet(new ServletHolder(new Main()), "/*");
-        server.start();
-        server.join();
     }
 }

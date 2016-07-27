@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class Login {
     public static void login(HttpServletRequest req, HttpServletResponse resp, Connection connection, JSONObject jsonObject)
-            throws IOException{
+            throws IOException {
         try {
             String number = jsonObject.getString(Constants.PHONE_NUMBER);
             String password = jsonObject.getString(Constants.PASSWORD);
@@ -26,16 +26,13 @@ public class Login {
                 loginData.put(Constants.ID, rs.getLong(Constants.ACCOUNT__ID));
                 loginData.put(Constants.ACCOUNT__ACTIVE, rs.getBoolean(Constants.ACCOUNT__ACTIVE));
                 resp.getWriter().print(loginData.toString());
-            }
-            else
+            } else
                 throw new JSONException("Invalid credentials");
 
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             resp.setStatus(Constants.INTERNAL_SERVER_ERROR);
             resp.getWriter().print(Main.getStackTrace(e));
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             resp.setStatus(Constants.BAD_REQUEST);
             resp.getWriter().print(Main.getStackTrace(e));
         }

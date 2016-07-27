@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,29 +28,28 @@ public class MakeCall {
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                boolean active = rs.getBoolean(Constants.ACCOUNT__ACTIVE);
-                if (active) {
-                    Timestamp timestamp = rs.getTimestamp(Constants.ACCOUNT__LAST_CALL);
-                    if (timestamp != null) {
-                        Date lastCallDate = new Date(timestamp.getTime());
-                        resp.getWriter().print(lastCallDate.toString());
-                    }
-                    makeCall(receiverNumber);
+                //boolean active = rs.getBoolean(Constants.ACCOUNT__ACTIVE);
+                Timestamp timestamp = rs.getTimestamp(Constants.ACCOUNT__LAST_CALL);
+                if (timestamp != null) {
+                    Date lastCallDate = new Date(timestamp.getTime());
+                    resp.getWriter().print(lastCallDate.toString());
                 }
-                else
-                    throw new JSONException("Account is not active");
-            }
-            else {
+                String updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP and account__daily_call_cntr " +
+                        "= account__daily_call_cntr + 1 WHERE account__id = ?";
+                stmt = connection.prepareStatement(updateSQL);
+                stmt.setLong(1, accountId);
+                stmt.executeUpdate();
+                makeCall(receiverNumber);
+            } else {
                 throw new JSONException("Account doesn't exist");
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             resp.setStatus(Constants.INTERNAL_SERVER_ERROR);
             resp.getWriter().write(Main.getStackTrace(e));
         }
     }
 
-    public static void makeCall(String receiverNumber) throws TwilioRestException{
+    public static void makeCall(String receiverNumber) throws TwilioRestException {
         TwilioRestClient client = new TwilioRestClient(Constants.ACCOUNT_SID, Constants.AUTH_TOKEN);
         Account account = client.getAccount();
         CallFactory callFactory = account.getCallFactory();
