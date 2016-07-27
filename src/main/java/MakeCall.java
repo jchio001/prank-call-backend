@@ -27,7 +27,7 @@ public class MakeCall {
         String password = jsonObject.getString(Constants.PASSWORD);
 
         try {
-            String getStatusQuery = "Select account__subbed, account__active from account WHERE account__id = ? and account__password = ? LIMIT 1";
+            String getStatusQuery = "Select account__subbed, account__active, account__last_call from account WHERE account__id = ? and account__password = ? LIMIT 1";
             PreparedStatement stmt = connection.prepareStatement(getStatusQuery);
             stmt.setLong(1, accountId);
             stmt.setString(2, password);

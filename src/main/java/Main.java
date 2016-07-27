@@ -75,7 +75,9 @@ public class Main extends HttpServlet {
                 } else if (pathPieces[1].equals("activateAccount")) {
                     ActivateAccount.activateAccount(request, response, connection, jsonObject);
                 }
-
+                else if (pathPieces[1].equals("login")) {
+                    Login.login(request, response, connection, jsonObject);
+                }
             } catch (JSONException e) {
                 response.setStatus(Constants.BAD_REQUEST);
                 response.getWriter().print(getStackTrace(e));
