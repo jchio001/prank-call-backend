@@ -32,10 +32,12 @@ public class MakeCall {
                 Timestamp timestamp = rs.getTimestamp(Constants.ACCOUNT__LAST_CALL);
                 if (timestamp != null) {
                     Date lastCallDate = new Date(timestamp.getTime());
-                    resp.getWriter().print(lastCallDate.toString());
+                    resp.getWriter().print(lastCallDate.toString() + "\n");
                 }
                 String updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP, account__daily_call_cntr " +
                         "= account__daily_call_cntr + 1 WHERE account__id = ?";
+                Date today = new Date();
+                resp.getWriter().print(today.toString());
                 stmt = connection.prepareStatement(updateSQL);
                 stmt.setLong(1, accountId);
                 stmt.executeUpdate();
