@@ -111,6 +111,8 @@ public class Main extends HttpServlet {
                 } else if (pathPieces[1].equals("login")) {
                     Login.login(request, response, connection, jsonObject);
                 }
+                else
+                    response.setStatus(Constants.NOT_FOUND);
             } catch (JSONException e) {
                 response.setStatus(Constants.BAD_REQUEST);
                 response.getWriter().print(getStackTrace(e));

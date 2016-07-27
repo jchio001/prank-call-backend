@@ -77,4 +77,12 @@ public class MakeCall {
         callParams.put(Constants.URL, "https://raw.githubusercontent.com/jchio001/TwilioXML/master/Response.xml");
         Call call = callFactory.create(callParams);
     }
+
+    public static void makeTrialCall(HttpServletRequest req, String receiverNumber) {
+//        try {
+//            String ipAddr = req.getRemoteAddr();
+//            if (ipAddr)
+//            String insertSQL = "INSERT";
+//        }
+    }
 }
