@@ -13,12 +13,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Jonathan Chiou on 7/22/2016.
- */
 public class MakeCall {
     public static void makeCall(HttpServletRequest req, HttpServletResponse resp, Connection connection, JSONObject jsonObject)
             throws IOException, TwilioRestException, JSONException {
@@ -35,15 +35,9 @@ public class MakeCall {
             if (rs.next()) {
                 boolean active = rs.getBoolean(Constants.ACCOUNT__ACTIVE);
                 if (active) {
-                    TwilioRestClient client = new TwilioRestClient(Constants.ACCOUNT_SID, Constants.AUTH_TOKEN);
-                    Account account = client.getAccount();
-                    CallFactory callFactory = account.getCallFactory();
-                    Map<String, String> callParams = new HashMap<>();
-                    callParams.put(Constants.TO, receiverNumber);
-                    callParams.put(Constants.FROM, Constants.FROM_NUMBER);
-                    callParams.put(Constants.METHOD, Constants.GET);
-                    callParams.put(Constants.URL, "https://raw.githubusercontent.com/jchio001/TwilioXML/master/Response.xml");
-                    Call call = callFactory.create(callParams);
+                    Date lastCallDate  = new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString(Constants.ACCOUNT__LAST_CALL));
+                    resp.getWriter().print(lastCallDate);
+                    makeCall(receiverNumber);
                 }
                 else
                     throw new JSONException("Account is not active");
@@ -52,9 +46,21 @@ public class MakeCall {
                 throw new JSONException("Account doesn't exist");
             }
         }
-        catch (SQLException e) {
+        catch (SQLException | ParseException e) {
             resp.setStatus(Constants.INTERNAL_SERVER_ERROR);
             resp.getWriter().write(Main.getStackTrace(e));
         }
+    }
+
+    public static void makeCall(String receiverNumber) throws TwilioRestException{
+        TwilioRestClient client = new TwilioRestClient(Constants.ACCOUNT_SID, Constants.AUTH_TOKEN);
+        Account account = client.getAccount();
+        CallFactory callFactory = account.getCallFactory();
+        Map<String, String> callParams = new HashMap<>();
+        callParams.put(Constants.TO, receiverNumber);
+        callParams.put(Constants.FROM, Constants.FROM_NUMBER);
+        callParams.put(Constants.METHOD, Constants.GET);
+        callParams.put(Constants.URL, "https://raw.githubusercontent.com/jchio001/TwilioXML/master/Response.xml");
+        Call call = callFactory.create(callParams);
     }
 }
