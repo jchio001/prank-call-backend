@@ -34,7 +34,7 @@ public class MakeCall {
                     Date lastCallDate = new Date(timestamp.getTime());
                     resp.getWriter().print(lastCallDate.toString());
                 }
-                String updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP and account__daily_call_cntr " +
+                String updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP, account__daily_call_cntr " +
                         "= account__daily_call_cntr + 1 WHERE account__id = ?";
                 stmt = connection.prepareStatement(updateSQL);
                 stmt.setLong(1, accountId);
