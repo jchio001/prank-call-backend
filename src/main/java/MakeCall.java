@@ -36,10 +36,10 @@ public class MakeCall {
                 boolean active = rs.getBoolean(Constants.ACCOUNT__ACTIVE);
                 if (active) {
                     String dateString = rs.getString(Constants.ACCOUNT__LAST_CALL);
-                    if (!dateString.isEmpty()) {
-                        Date lastCallDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
-                        resp.getWriter().print(lastCallDate);
-                    }
+//                    if (!dateString.isEmpty()) {
+//                        Date lastCallDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+//                        resp.getWriter().print(lastCallDate);
+//                    }
                     makeCall(receiverNumber);
                 }
                 else
@@ -49,7 +49,8 @@ public class MakeCall {
                 throw new JSONException("Account doesn't exist");
             }
         }
-        catch (SQLException | ParseException e) {
+        //| ParseException 
+        catch (SQLException e) {
             resp.setStatus(Constants.INTERNAL_SERVER_ERROR);
             resp.getWriter().write(Main.getStackTrace(e));
         }
