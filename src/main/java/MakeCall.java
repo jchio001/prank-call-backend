@@ -9,10 +9,7 @@ import org.json.JSONObject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,11 +32,11 @@ public class MakeCall {
             if (rs.next()) {
                 boolean active = rs.getBoolean(Constants.ACCOUNT__ACTIVE);
                 if (active) {
-                    String dateString = rs.getString(Constants.ACCOUNT__LAST_CALL);
-//                    if (!dateString.isEmpty()) {
-//                        Date lastCallDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
-//                        resp.getWriter().print(lastCallDate);
-//                    }
+                    Timestamp timestamp = rs.getTimestamp(Constants.ACCOUNT__LAST_CALL);
+                    if (timestamp != null) {
+                        Date lastCallDate = new Date(timestamp.getTime());
+                        resp.getWriter().print(lastCallDate.toString());
+                    }
                     makeCall(receiverNumber);
                 }
                 else
@@ -49,7 +46,6 @@ public class MakeCall {
                 throw new JSONException("Account doesn't exist");
             }
         }
-        //| ParseException 
         catch (SQLException e) {
             resp.setStatus(Constants.INTERNAL_SERVER_ERROR);
             resp.getWriter().write(Main.getStackTrace(e));
