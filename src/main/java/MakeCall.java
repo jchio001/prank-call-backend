@@ -38,9 +38,9 @@ public class MakeCall {
                     Date today = new Date();
                     if (DateUtils.isSameDay(lastCallDate, today)) {
                         if (!isSubbed && (dailyCallCntr >= 3)) {
-                            throw new JSONException("User has exceeded daily call limit");
+                            throw new JSONException(Constants.EXCEEDED_CALL_LIMIT);
                         }
-                        
+
                         updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP, account__daily_call_cntr " +
                                 "= account__daily_call_cntr + 1 WHERE account__id = ?";
                     }

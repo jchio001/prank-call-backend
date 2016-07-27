@@ -36,6 +36,11 @@ public class Constants {
     public static final String ACCOUNT__DAILY_CALL_CNTR = "account__daily_call_cntr";
     public static final String ACCOUNT__SUBBED = "account__subbed";
 
+    //ERROR MESSAGES
+    public static final String INVALID_CREDENTIALS = "Invalid credentials";
+    public static final String EXCEEDED_CALL_LIMIT = "User has exceeded daily call limit";
+    public static final String TWILIO_ERROR = "Error relating to Twilio";
+
     public static final int BAD_REQUEST = 400;
     public static final int UNATHORIZED = 401;
     public static final int NOT_FOUND = 404;

@@ -27,7 +27,7 @@ public class Login {
                 loginData.put(Constants.ACCOUNT__ACTIVE, rs.getBoolean(Constants.ACCOUNT__ACTIVE));
                 resp.getWriter().print(loginData.toString());
             } else
-                throw new JSONException("Invalid credentials");
+                throw new JSONException(Constants.INVALID_CREDENTIALS);
 
         } catch (SQLException e) {
             resp.setStatus(Constants.INTERNAL_SERVER_ERROR);

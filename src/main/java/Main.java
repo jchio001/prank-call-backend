@@ -116,7 +116,7 @@ public class Main extends HttpServlet {
                 response.getWriter().print(getStackTrace(e));
             } catch (TwilioRestException e) {
                 response.setStatus(Constants.INTERNAL_SERVER_ERROR);
-                response.getWriter().print("Twilio error.");
+                response.getWriter().print(Constants.TWILIO_ERROR);
             } finally {
                 try {
                     connection.close();
