@@ -117,7 +117,7 @@ public class MakeCall {
             makeCall(receiverNumber);
         }
         else {
-            String insertSQL = "INSERT into trial_call(trial_call__ip_addr, trial_call__last_call, trial_call__daily_cntr) VALUES " +
+            String insertSQL = "INSERT into trial_call(trial_call__ip_addr, trial_call__last_call, trial_call__daily_call_cntr) VALUES " +
                     "(?, CURRENT_TIMESTAMP, 1)";
             stmt = connection.prepareStatement(insertSQL);
             stmt.setString(1, ipAddr);
