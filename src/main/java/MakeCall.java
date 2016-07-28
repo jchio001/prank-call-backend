@@ -84,6 +84,7 @@ public class MakeCall {
         String ipAddr = req.getHeader("X-FORWARDED-FOR");
         if (ipAddr == null) {
             ipAddr = req.getRemoteAddr();
+            return;
         }
         String selectSQL = "Select trial_call__last_call, trial_call__daily_call_cntr FROM trial_call WHERE trial_call__ip_addr = " +
                 "?";
