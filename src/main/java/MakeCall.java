@@ -105,7 +105,7 @@ public class MakeCall {
             }
             else if (isSameDay && dailyCallCntr < 2) {
                 updateSQL = "UPDATE trial_call SET trial_call__last_call = CURRENT_TIMESTAMP, trial_call__daily_call_cntr = " +
-                        "trial_call__daily_call_cntr = 1 WHERE trial_call__ip_addr = ? ";
+                        "trial_call__daily_call_cntr + 1 WHERE trial_call__ip_addr = ? ";
 
             }
             else {
