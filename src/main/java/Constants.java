@@ -35,6 +35,8 @@ public class Constants {
     public static final String ACCOUNT__LAST_CALL = "account__last_call";
     public static final String ACCOUNT__DAILY_CALL_CNTR = "account__daily_call_cntr";
     public static final String ACCOUNT__SUBBED = "account__subbed";
+    public static final String TRIAL_CALL__LAST_CALL = "trial_call__last_call";
+    public static final String TRIAL_CALL__DAILY_CALL_CNTR = "trial_call__daily_call_cntr";
 
     //ERROR MESSAGES
     public static final String INVALID_CREDENTIALS = "Invalid credentials";
