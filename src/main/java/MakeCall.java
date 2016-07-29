@@ -47,14 +47,14 @@ public class MakeCall {
                         }
 
                         updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP, account__daily_call_cntr " +
-                                "= account__daily_call_cntr + 1 WHERE account__id = ?";
+                                "= account__daily_call_cntr + 1, account__total_cnt = account__total_cnt + 1 WHERE account__id = ?";
                     } else {
                         updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP, account__daily_call_cntr " +
-                                "= 1 WHERE account__id = ?";
+                                "= 1, account__total_cnt = account__total_cnt + 1 WHERE account__id = ?";
                     }
                 } else {
                     updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP, account__daily_call_cntr " +
-                            "= account__daily_call_cntr + 1 WHERE account__id = ?";
+                            "= account__daily_call_cntr + 1, account__total_cnt = account__total_cnt + 1 WHERE account__id = ?";
                 }
                 stmt = connection.prepareStatement(updateSQL);
                 stmt.setLong(1, accountId);
@@ -105,12 +105,12 @@ public class MakeCall {
             }
             else if (isSameDay && dailyCallCntr < 2) {
                 updateSQL = "UPDATE trial_call SET trial_call__last_call = CURRENT_TIMESTAMP, trial_call__daily_call_cntr = " +
-                        "trial_call__daily_call_cntr + 1 WHERE trial_call__ip_addr = ? ";
+                        "trial_call__daily_call_cntr + 1, trial_call__total_cnt = trial_call__total_cnt + 1 WHERE trial_call__ip_addr = ? ";
 
             }
             else {
-                updateSQL = "UPDATE trial_call SET trial_call__last_call = CURRENT_TIMESTAMP, trial_call__daily_cntr = 1 WHERE " +
-                        "trial_call__ip_addr = ?";
+                updateSQL = "UPDATE trial_call SET trial_call__last_call = CURRENT_TIMESTAMP, trial_call__daily_cntr = 1, , trial_call__total_cnt = " +
+                        "trial_call__total_cnt + 1 WHERE trial_call__ip_addr = ?";
             }
             stmt = connection.prepareStatement(updateSQL);
             stmt.setString(1, ipAddr);
