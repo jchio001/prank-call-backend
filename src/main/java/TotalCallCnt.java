@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class GetTotalCallCnt {
+public class TotalCallCnt {
     public static void getTotalCallCnt(HttpServletRequest req, HttpServletResponse resp, Connection conn) throws IOException{
         try {
             String cntSQL = "select SUM(total) as total from (select SUM(account__total_cnt) as total from account UNION " +

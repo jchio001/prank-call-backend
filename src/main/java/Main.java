@@ -63,7 +63,7 @@ public class Main extends HttpServlet {
                 String[] pathPieces = path.split("/");
                 try {
                     if (pathPieces[1].equals("totalCallCnt")) {
-                        GetTotalCallCnt.getTotalCallCnt(request, response, connection);
+                        TotalCallCnt.getTotalCallCnt(request, response, connection);
                     }
                     connection.close();
                 } catch (SQLException ignored) {
