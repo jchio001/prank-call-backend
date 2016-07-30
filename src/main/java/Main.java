@@ -62,8 +62,14 @@ public class Main extends HttpServlet {
                 String path = request.getRequestURI();
                 String[] pathPieces = path.split("/");
                 try {
+                    if (pathPieces[1].equals("totalCallCnt")) {
+                        GetTotalCallCnt.getTotalCallCnt(request, response, connection);
+                    }
                     connection.close();
                 } catch (SQLException ignored) {
+                }
+                finally {
+                    connection.close();
                 }
             }
         } catch (Exception e) {

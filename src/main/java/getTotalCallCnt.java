@@ -8,8 +8,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class getTotalCallCnt {
-    public static void createAccount(HttpServletRequest req, HttpServletResponse resp, Connection conn) throws IOException{
+public class GetTotalCallCnt {
+    public static void getTotalCallCnt(HttpServletRequest req, HttpServletResponse resp, Connection conn) throws IOException{
         try {
             String cntSQL = "select SUM(total) as total from (select SUM(account__total_cnt) as total from account UNION " +
                 "select SUM(trial_call__total_cnt) as total from trial_call) totals";
