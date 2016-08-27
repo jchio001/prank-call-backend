@@ -1,0 +1,87 @@
+import java.io.*;
+import java.util.*;
+
+/*
+ * To execute Java, please define "static void main" on a class
+ * named Solution.
+ *
+ * If you need more classes, simply define them inline.
+ */
+class Solution {
+  public static class Node {
+  
+    int value;
+    Node next;
+  
+    public Node(int value) {
+      this.value = value;
+      this.next = null;
+    }      
+  
+  };
+  
+  public static Node CreateList() {
+    Node A = new Node(4);
+    Node B = new Node(7);
+    Node C = new Node(1);
+    Node D = new Node(9);
+    Node E = new Node(6);
+    A.next = B;
+    B.next = C;
+    C.next = D;
+    D.next = E;
+    return A;
+  }
+    
+  public static void printList(Node head) {
+    Node cur = head;
+    while (cur != null) {
+      System.out.println(cur.value);
+      cur = cur.next;
+    }
+  }
+  
+  public static Node getMiddle(Node head) {
+    if (head == null)
+      return null;        
+    
+    Node moveOne = head;
+    Node moveTwo = head;
+    
+    System.out.println(moveOne.value + " " + moveTwo.value);
+    
+    while (moveTwo != null && moveTwo.next != null) {      
+      if (moveOne.next == null)
+        return moveOne;      
+      
+      moveOne = moveOne.next;
+      moveTwo = moveTwo.next.next;
+      System.out.println(moveOne.value + " " + moveTwo.value);
+    }
+    
+    return moveOne;
+    
+  }
+  
+  public static Node reverseList(Node head) {
+    Node newHead = head;
+    Node nextHolder;
+    Node nextNextHolder;
+    while (head.next != null) {               
+      nextHolder = head.next;      
+      nextNextHolder = head.next.next;
+      
+      nextHolder.next = newHead;
+      newHead = nextHolder;
+      head.next = nextNextHolder;
+    }
+    return newHead;
+  }
+  
+  public static void main(String[] args) {    
+    Node head = CreateList();    
+    //head = reverseList(head);        
+    Node middle = getMiddle(head);
+    System.out.println(middle.value);
+  }  
+}

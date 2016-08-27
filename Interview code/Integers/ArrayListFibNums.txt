@@ -1,0 +1,31 @@
+import java.io.*;
+import java.util.*;
+
+/*
+ * To execute Java, please define "static void main" on a class
+ * named Solution.
+ *
+ * If you need more classes, simply define them inline.
+ */
+
+class Solution {    
+  
+  public static int fibNum(int num) {
+    if (num < 0)
+      return -1;
+    
+    //When you put in some number into the intializer
+    //You are setting the CAPACITY not the SIZE
+    ArrayList<Integer> al = new ArrayList<Integer>();
+    al.add(0, 0);
+    al.add(1, 1);    
+    for (int i = 2; i < num + 1; ++i) {
+      al.add(al.get(i - 1) + al.get(i - 2));
+    }    
+    return al.get(num);
+  }
+  
+  public static void main(String[] args) {    
+    System.out.println(fibNum(3));
+  }
+}

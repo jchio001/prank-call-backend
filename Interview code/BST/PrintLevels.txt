@@ -1,0 +1,81 @@
+import java.io.*;
+import java.util.*;
+
+/*
+ * To execute Java, please define "static void main" on a class
+ * named Solution.
+ *
+ * If you need more classes, simply define them inline.
+ */
+
+class Solution {
+
+  public static class Node {
+    int value;
+    Node left;
+    Node right;        
+    
+    
+    public Node(int value) {
+      this.value = value;
+      left = null;
+      right = null;
+    }
+    
+  };
+  
+  public static Node SetUpBST() {
+    Node five = new Node(5);
+    Node two = new Node(2);
+    Node negfour = new Node(-4);
+    Node three = new Node(3);
+    Node twelve = new Node(12);
+    Node nine = new Node(9);
+    Node twentyone = new Node(21);
+    Node nineteen = new Node(19);
+    Node twentyfive = new Node(25);
+    
+    five.left = two;
+    two.left = negfour;
+    two.right = three;
+    five.right = twelve;
+    twelve.left = nine;
+    twelve.right = twentyone;
+    twentyone.left = nineteen;
+    twentyone.right = twentyfive;
+    return five;
+  }
+  
+  public static void printLevels(Node head) {
+    if (head == null)
+      return;
+    
+    int sz;
+    
+    Queue<Node> q = new LinkedList<Node>();
+    q.add(head);        
+    Node curNode;
+    
+    while (!q.isEmpty()) {
+      sz = q.size();
+      
+      while (sz > 0) {
+        curNode = q.poll();
+        System.out.print(curNode.value + " ");
+        --sz;
+        
+        if (curNode.left != null)
+          q.add(curNode.left);
+        if (curNode.right != null)
+          q.add(curNode.right);                
+      }
+      System.out.println();            
+    }
+        
+  }
+  
+  public static void main(String[] args) {
+    Node head = SetUpBST();
+    printLevels(head);
+  }
+}

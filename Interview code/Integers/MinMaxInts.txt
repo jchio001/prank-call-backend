@@ -1,0 +1,52 @@
+import java.io.*;
+import java.util.*;
+
+/*
+ * To execute Java, please define "static void main" on a class
+ * named Solution.
+ *
+ * If you need more classes, simply define them inline.
+ */
+
+class Solution {
+    
+  public static void getMinAndMax(int arr[]) {
+            
+    int min = Integer.MAX_VALUE;
+    int max = Integer.MIN_VALUE;
+    
+    int relativeMin, relativeMax;      
+    int num1, num2;
+    
+    int i = 0;
+    for (; i < arr.length; i += 2) {
+      
+      if (i + 1 >= arr.length) {
+        if (arr[i] < min)
+          min = arr[i];
+        if (arr[i] > max)
+          max = arr[i];
+          
+        break;
+      }
+      
+      num1 = arr[i];
+      num2 = arr[i + 1];
+      relativeMin = Math.min(num1, num2);
+      relativeMax = num1 + num2 - relativeMin;
+      
+      if (relativeMin < min)
+        min = relativeMin;
+      if (relativeMax > max)
+        max = relativeMax;
+    }
+    
+    System.out.println(min + " " + max);
+    
+  }
+  
+  public static void main(String[] args) {
+    int arr[] = {4, 1, 2, 3, 5};
+    getMinAndMax(arr);
+  }
+}

@@ -1,0 +1,45 @@
+import java.io.*;
+import java.util.*;
+
+/*
+ * To execute Java, please define "static void main" on a class
+ * named Solution.
+ *
+ * If you need more classes, simply define them inline.
+ */
+
+class Solution {
+  
+  
+  static int adjMatr[][] = {{0, 1, 1, 99999},
+                     {99999, 0, 1, 1},
+                     {99999, 99999, 0, 1},
+                     {99999, 99999, 99999, 0}};
+  
+  
+  public static int bellmanFords(int a, int b) {
+    int distArr[] = new int[4];
+    for (int i = 0; i < 4; ++i) {
+      if (i == a)
+        distArr[i] = 0;
+      else
+        distArr[i] = 99999;
+    }        
+    
+    int newLen;
+    for (int i = 0; i < 4; ++i)
+      for (int j = i; j < 4; ++j) {
+        
+        newLen = distArr[i] + adjMatr[i][j];        
+        if (newLen < distArr[j])
+          distArr[j] = newLen;
+      }    
+    
+    return distArr[b];
+    
+  }
+  
+  public static void main(String[] args) {    
+      System.out.println(bellmanFords(2, 1));    
+  }
+}

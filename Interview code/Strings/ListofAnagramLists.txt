@@ -1,0 +1,104 @@
+import java.io.*;
+import java.util.*;
+
+/*
+ * To execute Java, please define "static void main" on a class
+ * named Solution.
+ *
+ * If you need more classes, simply define them inline.
+ */
+
+  class Solution {
+
+    static class Node {
+
+    String value;
+    Node next;
+
+    public Node(String value) {
+      this.value = value;
+      this.next = null;
+    }  
+
+  };
+    
+  public static void printList(Node head) {
+    Node cur = head;
+    while (cur != null) {
+      System.out.print(cur.value + " ");
+      cur = cur.next;
+    }
+  }
+    
+  //Given a string, returns an array that contains the # of each character the string has
+  public static String generateValue(String word) {
+    int tmp;
+    int numofCharsHash[] = new int[26];
+    Arrays.fill(numofCharsHash, 0);
+    
+    //loop 1: count the number of each character in a word
+    for (int i = 0; i < word.length(); ++i) {
+      tmp = Character.getNumericValue(Character.toLowerCase(word.charAt(i))) - 10;      
+      ++numofCharsHash[tmp];
+    }
+            
+    //Creating a hash based on the characters that are there in string
+    //Unlike the 1st array, this one only accounts for chars that are there
+    //if I were to turn the array from my 1st loop into a string, there'll be
+    //overlap between some string => hash mappings
+    StringBuilder sb = new StringBuilder();    
+    for (int j = 0; j < numofCharsHash.length; ++j) {      
+      if (numofCharsHash[j] > 0) {
+        tmp = j + 65;        
+        sb.append((char) tmp);
+        sb.append(numofCharsHash[j]);
+      }
+    }
+    
+    String finalHash = sb.toString();
+    return finalHash;
+  }
+    
+  public static void insert(Node head, String word) {
+    Node end = head;
+    while (end.next != null) {
+      end = end.next;
+    }
+    end.next = new Node(word);
+  }
+    
+  public static void main(String[] args) {    
+    HashMap<String, Node> myMap = new HashMap<String, Node>();
+    String wordList[] = {"Hello", "olleH", "words", "sword", "five"};
+    String numOfCharsHash;    
+
+    Node tmpNode;
+    for (int i = 0; i < wordList.length; ++i) {
+      numOfCharsHash = generateValue(wordList[i]);         
+      
+      if (myMap.containsKey(numOfCharsHash)) {          
+        //If an anagram for the word in questions already exists
+        //Get the list of words for that anagram, and append that word to the list
+        tmpNode = myMap.get(numOfCharsHash);
+        insert(tmpNode, wordList[i]);
+      }
+      else {                
+        //Else create a new entry in the hash table
+        myMap.put(numOfCharsHash, new Node(wordList[i]));
+      }
+    }
+    
+    //create a list of anagram lists
+    List<Node> listofLists = new ArrayList<Node>();
+    for (Node value : myMap.values()) {
+      listofLists.add(value);
+    }    
+    
+    //print out the stupid list of lists
+    for (int j = 0; j < listofLists.size(); ++j) {
+      printList(listofLists.get(j));
+      System.out.println();
+    }
+    
+  }
+}

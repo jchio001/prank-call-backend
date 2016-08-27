@@ -1,0 +1,94 @@
+import java.io.*;
+import java.util.*;
+
+/*
+ * To execute Java, please define "static void main" on a class
+ * named Solution.
+ *
+ * If you need more classes, simply define them inline.
+ */
+
+class Solution {    
+  public static class Node {
+    int value;
+    Node left;
+    Node right;        
+    
+    
+    public Node(int value) {
+      this.value = value;
+      left = null;
+      right = null;
+    }
+    
+  };
+  
+  public static Node SetUpBST() {
+    Node five = new Node(5);
+    Node two = new Node(2);
+    Node negfour = new Node(-4);
+    Node three = new Node(3);
+    Node twelve = new Node(12);
+    Node nine = new Node(9);
+    Node twentyone = new Node(21);
+    Node nineteen = new Node(19);
+    Node twentyfive = new Node(25);
+    
+    five.left = two;
+    two.left = negfour;
+    two.right = three;
+    five.right = twelve;
+    twelve.left = nine;
+    twelve.right = twentyone;
+    twentyone.left = nineteen;
+    twentyone.right = twentyfive;
+    return five;
+  }
+  
+  public static boolean NodeExists(Node node, int value) {    
+    if (node == null)
+      return false;
+    
+    if (node.value == value)
+      return true;        
+    
+    if (value < node.value)
+      return false || NodeExists(node.left, value);
+    else
+      return false || NodeExists(node.right, value);        
+  }
+  
+  public static boolean checkExistence(Node head, int val1, int val2) {
+    return NodeExists(head, val1) && NodeExists(head, val2);
+  }
+  
+  public static int findLCA(Node head, int val1, int val2) {
+    if (head == null) {
+        System.out.println("Error");
+        return 0;
+    }
+    
+    if (val1 <= head.value && head.value <= val2)
+      return head.value;
+    else if (head.value < val1 && head.value < val2)
+      return findLCA(head.right, val1, val2);
+    else
+      return findLCA(head.left, val1, val2);            
+  }
+  
+  public static int mainLCAFunction(Node head, int val1, int val2) {
+    if (!checkExistence(head, val1, val2)) {
+      System.out.println("Error: At least 1 value not in the tree");
+      return 0;
+    }
+    
+    int tmp1 = Math.min(val1, val2);
+    int tmp2 = Math.max(val1, val2);        
+    return findLCA(head, tmp1, tmp2);
+  }
+  
+  public static void main(String[] args) {
+    Node head = SetUpBST();    
+    System.out.println(findLCA(head, 9, 25));
+  }
+}

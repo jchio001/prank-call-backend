@@ -1,0 +1,51 @@
+import java.io.*;
+import java.util.*;
+
+/*
+ * To execute Java, please define "static void main" on a class
+ * named Solution.
+ *
+ * If you need more classes, simply define them inline.
+ */
+
+class Solution {    
+  
+  public static class TwoStacksOneQ {
+    Stack<Integer> StackA;
+    Stack<Integer> StackB;    
+    
+    public TwoStacksOneQ() {
+      StackA = new Stack<Integer>();
+      StackB = new Stack<Integer>();
+    }
+    
+    public void add(Integer value) {
+      StackA.add(value);
+      
+      Integer tmp;
+      while (!StackA.empty()) {        
+        tmp = StackA.pop();
+        StackB.add(tmp);        
+      }
+      
+      while (!StackB.empty()) {
+        tmp = StackB.pop();
+        StackA.add(tmp);
+      }
+    }
+    
+    public void printQueue() {
+      for (Integer i: StackA)
+        System.out.print(i + " ");
+    }    
+    
+  };
+  
+  public static void main(String[] args) {
+    TwoStacksOneQ myQueue = new TwoStacksOneQ();
+    myQueue.add(1);
+    myQueue.add(2);
+    myQueue.add(3);
+    myQueue.printQueue();
+  }
+}

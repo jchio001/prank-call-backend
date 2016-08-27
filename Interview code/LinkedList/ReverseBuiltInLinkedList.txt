@@ -1,0 +1,34 @@
+import java.io.*;
+import java.util.*;
+
+/*
+ * To execute Java, please define "static void main" on a class
+ * named Solution.
+ *
+ * If you need more classes, simply define them inline.
+ */
+
+class Solution {    
+  
+  public static void main(String[] args) {
+    LinkedList<Integer> myList = new LinkedList<Integer>();
+    myList.add(1);
+    myList.add(2);
+    myList.add(3);
+    myList.add(4);
+    myList.add(5);
+    
+    int oldHead = 0;
+    int tmp;
+    int sz = myList.size();
+        
+    while (oldHead < sz - 1) {
+      tmp = myList.remove(oldHead + 1);  
+      myList.addFirst(tmp);
+      ++oldHead;
+    }
+    
+    for (Integer i: myList)
+      System.out.print(i + " ");
+  }
+}
