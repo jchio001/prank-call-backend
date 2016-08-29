@@ -58,8 +58,8 @@ public class MakeCall {
                 }
                 stmt = connection.prepareStatement(updateSQL);
                 stmt.setLong(1, accountId);
-                stmt.executeUpdate();
                 makeCall(receiverNumber);
+                stmt.executeUpdate();
             } else {
                 throw new JSONException("Account doesn't exist");
             }

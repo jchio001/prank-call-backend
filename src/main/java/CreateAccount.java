@@ -42,8 +42,12 @@ public class CreateAccount {
 
             MessageFactory messageFactory = client.getAccount().getMessageFactory();
             Message msg = messageFactory.create(params);
-        } catch (JSONException | SQLException e) {
+        } catch (JSONException e) {
             resp.setStatus(Constants.BAD_REQUEST);
+            resp.getWriter().write(Main.getStackTrace(e));
+        }
+        catch (SQLException e) {
+            resp.setStatus(Constants.INTERNAL_SERVER_ERROR);
             resp.getWriter().write(Main.getStackTrace(e));
         }
     }

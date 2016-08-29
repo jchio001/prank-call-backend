@@ -29,7 +29,11 @@ public class Login {
             } else
                 throw new JSONException(Constants.INVALID_CREDENTIALS);
 
-        } catch (JSONException | SQLException e) {
+        } catch (JSONException e) {
+            resp.setStatus(Constants.BAD_REQUEST);
+            resp.getWriter().print(Main.getStackTrace(e));
+        }
+        catch (SQLException e) {
             resp.setStatus(Constants.INTERNAL_SERVER_ERROR);
             resp.getWriter().print(Main.getStackTrace(e));
         }
