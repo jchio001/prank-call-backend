@@ -21,7 +21,7 @@ public class MakeCall {
         try {
             String receiverNumber = jsonObject.getString(Constants.RECEIVER_NUMBER_KEY);
             long accountId = jsonObject.getLong(Constants.ID);
-            if (accountId == 0) {
+            if (accountId == -1) {
                 makeTrialCall(req, connection, receiverNumber);
                 return;
             }
