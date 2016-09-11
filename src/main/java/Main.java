@@ -1,9 +1,4 @@
-import com.twilio.sdk.TwilioRestClient;
 import com.twilio.sdk.TwilioRestException;
-import com.twilio.sdk.resource.factory.MessageFactory;
-import com.twilio.sdk.resource.instance.Message;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -20,8 +15,6 @@ import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main extends HttpServlet {
     //For debugging purposes.
@@ -127,18 +120,6 @@ public class Main extends HttpServlet {
                 else
                     response.setStatus(Constants.NOT_FOUND);
             } catch (JSONException e) {
-                try {
-                    TwilioRestClient client = new TwilioRestClient(Constants.ACCOUNT_SID, Constants.AUTH_TOKEN);
-                    List<NameValuePair> params = new ArrayList<>();
-                    params.add(new BasicNameValuePair(Constants.TO, "5104492557"));
-                    params.add(new BasicNameValuePair(Constants.FROM, Constants.FROM_NUMBER));
-                    params.add(new BasicNameValuePair(Constants.BODY, Main.getStackTrace(e)));
-
-                    MessageFactory messageFactory = client.getAccount().getMessageFactory();
-                    Message msg = messageFactory.create(params);
-                }
-                catch (TwilioRestException t) {}
-
                 response.setStatus(Constants.BAD_REQUEST);
                 response.getWriter().print(getStackTrace(e));
             } catch (TwilioRestException e) {

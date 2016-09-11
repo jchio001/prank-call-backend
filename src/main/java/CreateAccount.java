@@ -2,6 +2,7 @@ import com.twilio.sdk.TwilioRestClient;
 import com.twilio.sdk.TwilioRestException;
 import com.twilio.sdk.resource.factory.MessageFactory;
 import com.twilio.sdk.resource.instance.Message;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +23,11 @@ public class CreateAccount {
             if (phoneNumber.isEmpty()) {
                 throw new JSONException("Empty phone number.");
             }
+
+            if (!StringUtils.isNumeric(phoneNumber) || phoneNumber.length() != 10) {
+                throw new JSONException("Invalid phone number");
+            }
+
             Random random = new Random();
             String password = jsonObject.getString(Constants.PASSWORD);
             int confirmKey = genConfirmKey(random);
