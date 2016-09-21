@@ -75,8 +75,9 @@ public class CreateAccount {
             throw new SQLException();
         }
 
-        JSONObject loginJSON = new JSONObject();
-        loginJSON.put(Constants.ID, id);
-        return loginJSON.toString();
+        JSONObject accountJSON = new JSONObject();
+        accountJSON.put(Constants.ID, id);
+        accountJSON.put(Constants.ACCOUNT__ACTIVE, false);
+        return accountJSON.toString();
     }
 }
