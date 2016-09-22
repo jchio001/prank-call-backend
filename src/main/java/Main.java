@@ -60,6 +60,7 @@ public class Main extends HttpServlet {
             if (connection != null) {
                 //if a connection is successfully made, parse the URI and call functions based on the parsed URI
                 String path = request.getRequestURI();
+                response.getWriter().println(path);
                 String[] pathPieces = path.split("/");
                 try {
                     if (pathPieces[1].equals("totalCallCnt")) {
