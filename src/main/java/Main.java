@@ -65,8 +65,9 @@ public class Main extends HttpServlet {
                     if (pathPieces[1].equals("totalCallCnt")) {
                         TotalCallCnt.getTotalCallCnt(request, response, connection);
                     } else if (pathPieces[1].substring(0, 7).equals("history")) {
+                        response.getWriter().println(pathPieces[1]);
                         String[] params = pathPieces[1].split("\\?");
-                        response.getWriter().print(params.length);
+                        response.getWriter().println(params.length);
 //                        .split("&");
                         /*if (params.length == 1) {
                             String[] splitFrom = params[0].split("=");
