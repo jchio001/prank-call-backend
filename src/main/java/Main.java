@@ -65,8 +65,10 @@ public class Main extends HttpServlet {
                     if (pathPieces[1].equals("totalCallCnt")) {
                         TotalCallCnt.getTotalCallCnt(request, response, connection);
                     } else if (pathPieces[1].substring(0, 7).equals("history")) {
-                        String[] params = pathPieces[1].split("\\?")[1].split("&");
-                        if (params.length == 1) {
+                        String[] params = pathPieces[1].split("\\?");
+                        response.getWriter().print(params.length);
+//                        .split("&");
+                        /*if (params.length == 1) {
                             String[] splitFrom = params[0].split("=");
                             if (!splitFrom[0].equals("from") || splitFrom.length != 2) {
                                 response.setStatus(Constants.BAD_REQUEST);
@@ -84,7 +86,7 @@ public class Main extends HttpServlet {
                             }
 
                             GetHistory.getHistory(request, response, connection, splitFrom[1], splitTo[1]);
-                        }
+                        }*/
                         //GetHistory.getHistory(request, response);
                     }
                     connection.close();
