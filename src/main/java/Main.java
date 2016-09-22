@@ -60,41 +60,15 @@ public class Main extends HttpServlet {
             if (connection != null) {
                 //if a connection is successfully made, parse the URI and call functions based on the parsed URI
                 String path = request.getRequestURI();
-                response.getWriter().println(path);
                 String[] pathPieces = path.split("/");
-                try {
-                    if (pathPieces[1].equals("totalCallCnt")) {
-                        TotalCallCnt.getTotalCallCnt(request, response, connection);
-                    } else if (pathPieces[1].substring(0, 7).equals("history")) {
-                        response.getWriter().println(pathPieces[1]);
-                        String[] params = pathPieces[1].split("\\?");
-                        response.getWriter().println(params.length);
-//                        .split("&");
-                        /*if (params.length == 1) {
-                            String[] splitFrom = params[0].split("=");
-                            if (!splitFrom[0].equals("from") || splitFrom.length != 2) {
-                                response.setStatus(Constants.BAD_REQUEST);
-                                return;
-                            }
-
-                            GetHistory.getHistory(request, response, connection, splitFrom[1], "");
-                        } else if (params.length > 0) {
-                            String[] splitFrom = params[0].split("=");
-                            String[] splitTo = params[1].split("=");
-                            if (!splitFrom[0].equals("from") || splitFrom.length != 2 || !splitTo[0].equals("to") ||
-                                splitTo.length != 2) {
-                                response.setStatus(Constants.BAD_REQUEST);
-                                return;
-                            }
-
-                            GetHistory.getHistory(request, response, connection, splitFrom[1], splitTo[1]);
-                        }*/
-                        //GetHistory.getHistory(request, response);
-                    }
-                    connection.close();
-                } catch (SQLException ignored) {
-                } finally {
-                    connection.close();
+                if (pathPieces[1].equals("totalCallCnt")) {
+                    TotalCallCnt.getTotalCallCnt(request, response, connection);
+                } else if (pathPieces[1].equals("history")) {
+                    String from = request.getParameter("from");
+                    String to = request.getParameter("to");
+                    if (from != null)
+                        GetHistory.getHistory(request, response, connection, from,
+                            (to != null ? to : ""));
                 }
             }
         } catch (Exception e) {
