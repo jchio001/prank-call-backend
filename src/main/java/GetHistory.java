@@ -15,7 +15,7 @@ public class GetHistory {
         throws IOException {
         try {
             String historySQL = "SELECT history__from, history__to, history__timestamp from history WHERE history__from = ?" +
-                (to.equals("") ? "OR history__to = ?" : "") + "ORDER BY history__timestamp ASC";
+                (!to.equals("") ? "OR history__to = ?" : "") + "ORDER BY history__timestamp ASC";
             PreparedStatement stmt = connection.prepareStatement(historySQL);
             if (to.equals("")) {
                 stmt.setString(1, from);
