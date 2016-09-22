@@ -36,6 +36,7 @@ public class GetHistory {
                 history.put(Constants.HISTORY__TO, (receiver.equals(to) ?
                     receiver : "anonymous"));
                 history.put(Constants.HISTORY__TIMESTAMP, rs.getTimestamp(Constants.HISTORY__TIMESTAMP));
+                historyArr.put(history);
             }
 
             resp.getWriter().print(historyArr.toString());
