@@ -38,7 +38,11 @@ public class Constants {
     public static final String ACCOUNT__SUBBED = "account__subbed";
     public static final String TRIAL_CALL__LAST_CALL = "trial_call__last_call";
     public static final String TRIAL_CALL__DAILY_CALL_CNTR = "trial_call__daily_call_cntr";
+    public static final String HISTORY__FROM = "history__from";
+    public static final String HISTORY__TO = "history__to";
+    public static final String HISTORY__TIMESTAMP = "history__timestamp";
     public static final String TOTAL = "total";
+
 
     //ERROR MESSAGES
     public static final String INVALID_CREDENTIALS = "Invalid credentials.";

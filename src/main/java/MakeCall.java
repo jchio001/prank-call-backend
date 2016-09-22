@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class MakeCall {
     public static void makeCall(HttpServletRequest req, HttpServletResponse resp, Connection connection, JSONObject jsonObject)
-            throws IOException, TwilioRestException, JSONException {
+        throws IOException, TwilioRestException, JSONException {
         try {
             String receiverNumber = jsonObject.getString(Constants.RECEIVER_NUMBER_KEY);
             long accountId = jsonObject.getLong(Constants.ID);
@@ -50,14 +50,14 @@ public class MakeCall {
                         }
 
                         updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP, account__daily_call_cntr " +
-                                "= account__daily_call_cntr + 1, account__total_cnt = account__total_cnt + 1 WHERE account__id = ?";
+                            "= account__daily_call_cntr + 1, account__total_cnt = account__total_cnt + 1 WHERE account__id = ?";
                     } else {
                         updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP, account__daily_call_cntr " +
-                                "= 1, account__total_cnt = account__total_cnt + 1 WHERE account__id = ?";
+                            "= 1, account__total_cnt = account__total_cnt + 1 WHERE account__id = ?";
                     }
                 } else {
                     updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP, account__daily_call_cntr " +
-                            "= account__daily_call_cntr + 1, account__total_cnt = account__total_cnt + 1 WHERE account__id = ?";
+                        "= account__daily_call_cntr + 1, account__total_cnt = account__total_cnt + 1 WHERE account__id = ?";
                 }
                 stmt = connection.prepareStatement(updateSQL);
                 stmt.setLong(1, accountId);
@@ -85,13 +85,13 @@ public class MakeCall {
         Call call = callFactory.create(callParams);
     }
 
-    public static void makeTrialCall(HttpServletRequest req, Connection connection, String receiverNumber) throws JSONException, SQLException, TwilioRestException{
+    public static void makeTrialCall(HttpServletRequest req, Connection connection, String receiverNumber) throws JSONException, SQLException, TwilioRestException {
         String ipAddr = req.getHeader("X-FORWARDED-FOR");
         if (ipAddr == null) {
             ipAddr = req.getRemoteAddr();
         }
         String selectSQL = "Select trial_call__last_call, trial_call__daily_call_cntr FROM trial_call WHERE trial_call__ip_addr = " +
-                "?";
+            "?";
         PreparedStatement stmt = connection.prepareStatement(selectSQL);
         stmt.setString(1, ipAddr);
 
@@ -107,24 +107,21 @@ public class MakeCall {
             String updateSQL;
             if (isSameDay && dailyCallCntr >= 2) {
                 throw new JSONException(Constants.EXCEEDED_CALL_LIMIT);
-            }
-            else if (isSameDay && dailyCallCntr < 2) {
+            } else if (isSameDay && dailyCallCntr < 2) {
                 updateSQL = "UPDATE trial_call SET trial_call__last_call = CURRENT_TIMESTAMP, trial_call__daily_call_cntr = " +
-                        "trial_call__daily_call_cntr + 1, trial_call__total_cnt = trial_call__total_cnt + 1 WHERE trial_call__ip_addr = ? ";
+                    "trial_call__daily_call_cntr + 1, trial_call__total_cnt = trial_call__total_cnt + 1 WHERE trial_call__ip_addr = ? ";
 
-            }
-            else {
+            } else {
                 updateSQL = "UPDATE trial_call SET trial_call__last_call = CURRENT_TIMESTAMP, trial_call__daily_cntr = 1, , trial_call__total_cnt = " +
-                        "trial_call__total_cnt + 1 WHERE trial_call__ip_addr = ?";
+                    "trial_call__total_cnt + 1 WHERE trial_call__ip_addr = ?";
             }
             makeCall(receiverNumber);
             stmt = connection.prepareStatement(updateSQL);
             stmt.setString(1, ipAddr);
             stmt.executeUpdate();
-        }
-        else {
+        } else {
             String insertSQL = "INSERT into trial_call(trial_call__ip_addr, trial_call__last_call, trial_call__daily_call_cntr) VALUES " +
-                    "(?, CURRENT_TIMESTAMP, 1)";
+                "(?, CURRENT_TIMESTAMP, 1)";
             stmt = connection.prepareStatement(insertSQL);
             stmt.setString(1, ipAddr);
             stmt.executeUpdate();

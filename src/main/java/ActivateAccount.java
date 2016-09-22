@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 public class ActivateAccount {
     public static void activateAccount(HttpServletRequest req, HttpServletResponse resp, Connection connection, JSONObject jsonObject)
-            throws IOException, TwilioRestException {
+        throws IOException, TwilioRestException {
         try {
             String phoneNumber = jsonObject.getString(Constants.PHONE_NUMBER);
             String password = jsonObject.getString(Constants.PASSWORD);
@@ -22,7 +22,7 @@ public class ActivateAccount {
             }
 
             String activateAccQuery = "UPDATE account SET account__active = true WHERE account__phone_number = ? and " +
-                    "account__password = ? and account__confirm_key = ? and account__active = false";
+                "account__password = ? and account__confirm_key = ? and account__active = false";
             PreparedStatement stmt = connection.prepareStatement(activateAccQuery);
             stmt.setString(1, phoneNumber);
             stmt.setString(2, password);

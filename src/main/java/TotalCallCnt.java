@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class TotalCallCnt {
-    public static void getTotalCallCnt(HttpServletRequest req, HttpServletResponse resp, Connection conn) throws IOException{
+    public static void getTotalCallCnt(HttpServletRequest req, HttpServletResponse resp, Connection conn) throws IOException {
         try {
             String cntSQL = "select SUM(total) as total from (select SUM(account__total_cnt) as total from account UNION " +
                 "select SUM(trial_call__total_cnt) as total from trial_call) totals";
@@ -19,16 +19,13 @@ public class TotalCallCnt {
                 JSONObject responseJSON = new JSONObject();
                 responseJSON.put(Constants.TOTAL, total);
                 resp.getWriter().print(responseJSON.toString());
-            }
-            else {
+            } else {
                 throw new SQLException();
             }
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             resp.setStatus(Constants.BAD_REQUEST);
             resp.getWriter().print(Main.getStackTrace(e));
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             resp.setStatus(Constants.INTERNAL_SERVER_ERROR);
             resp.getWriter().print(Main.getStackTrace(e));
         }

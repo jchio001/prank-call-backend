@@ -53,7 +53,7 @@ public class Main extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
         Connection connection = getConnection(response);
         try {
             //If a GET HTTP request is sent, this function is called.
@@ -64,16 +64,37 @@ public class Main extends HttpServlet {
                 try {
                     if (pathPieces[1].equals("totalCallCnt")) {
                         TotalCallCnt.getTotalCallCnt(request, response, connection);
+                    } else if (pathPieces[1].substring(0, 7).equals("history")) {
+                        String[] params = pathPieces[1].split("\\?")[1].split("&");
+                        if (params.length == 1) {
+                            String[] splitFrom = params[0].split("=");
+                            if (!splitFrom[0].equals("from") || splitFrom.length != 2) {
+                                response.setStatus(Constants.BAD_REQUEST);
+                                return;
+                            }
+
+                            GetHistory.getHistory(request, response, connection, splitFrom[1], "");
+                        } else if (params.length > 0) {
+                            String[] splitFrom = params[0].split("=");
+                            String[] splitTo = params[1].split("=");
+                            if (!splitFrom[0].equals("from") || splitFrom.length != 2 || !splitTo[0].equals("to") ||
+                                splitTo.length != 2) {
+                                response.setStatus(Constants.BAD_REQUEST);
+                                return;
+                            }
+
+                            GetHistory.getHistory(request, response, connection, splitFrom[1], splitTo[1]);
+                        }
+                        //GetHistory.getHistory(request, response);
                     }
                     connection.close();
                 } catch (SQLException ignored) {
-                }
-                finally {
+                } finally {
                     connection.close();
                 }
             }
         } catch (Exception e) {
-            response.setStatus(Constants.INTERNAL_SERVER_ERROR);
+            response.setStatus(Constants.NOT_FOUND);
         } finally {
             try {
                 connection.close();
@@ -84,7 +105,7 @@ public class Main extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
         //If a POST HTTP request is sent, this function is called.
         // Get request body into string
         StringBuilder requestBody = new StringBuilder();
@@ -116,8 +137,7 @@ public class Main extends HttpServlet {
                     ActivateAccount.activateAccount(request, response, connection, jsonObject);
                 } else if (pathPieces[1].equals("login")) {
                     Login.login(request, response, connection, jsonObject);
-                }
-                else
+                } else
                     response.setStatus(Constants.NOT_FOUND);
             } catch (JSONException e) {
                 response.setStatus(Constants.BAD_REQUEST);

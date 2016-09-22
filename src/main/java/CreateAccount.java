@@ -17,7 +17,7 @@ import java.util.Random;
 
 public class CreateAccount {
     public static void createAccount(HttpServletRequest req, HttpServletResponse resp, Connection connection, JSONObject jsonObject)
-            throws IOException, TwilioRestException {
+        throws IOException, TwilioRestException {
         try {
             String phoneNumber = jsonObject.getString(Constants.PHONE_NUMBER);
             if (phoneNumber.isEmpty()) {
@@ -33,7 +33,7 @@ public class CreateAccount {
             int confirmKey = genConfirmKey(random);
 
             String insertSQL = "INSERT into account (account__phone_number, account__password, account__confirm_key) " +
-                    "VALUES (?, ?, ?)";
+                "VALUES (?, ?, ?)";
             PreparedStatement stmt = connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, phoneNumber);
             stmt.setString(2, password);
@@ -51,8 +51,7 @@ public class CreateAccount {
         } catch (JSONException e) {
             resp.setStatus(Constants.BAD_REQUEST);
             resp.getWriter().write(Main.getStackTrace(e));
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             resp.setStatus(Constants.INTERNAL_SERVER_ERROR);
             resp.getWriter().write(Main.getStackTrace(e));
         }
