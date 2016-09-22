@@ -95,6 +95,7 @@ public class Main extends HttpServlet {
             }
         } catch (Exception e) {
             response.setStatus(Constants.NOT_FOUND);
+            response.getWriter().print(getStackTrace(e));
         } finally {
             try {
                 connection.close();
