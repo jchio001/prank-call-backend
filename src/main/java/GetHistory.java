@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class GetHistory {
-    public static void getHistory(HttpServletRequest req, HttpServletResponse resp, Connection connection, String to, String from)
+    public static void getHistory(HttpServletRequest req, HttpServletResponse resp, Connection connection, String from, String to)
         throws IOException {
         try {
             String historySQL = "SELECT history__from, history__to, history__timestamp from history WHERE history__from = ?" +
@@ -28,8 +28,13 @@ public class GetHistory {
             JSONArray historyArr = new JSONArray();
             while (rs.next()) {
                 JSONObject history = new JSONObject();
-                history.put(Constants.HISTORY__FROM, rs.getString(Constants.HISTORY__FROM));
-                history.put(Constants.HISTORY__TO, rs.getString(Constants.HISTORY__TO));
+                String sender = rs.getString(Constants.HISTORY__FROM);
+                String receiver = rs.getString(Constants.HISTORY__TO);
+
+                history.put(Constants.HISTORY__FROM, (sender.equals(from) ?
+                    sender : "anonymous"));
+                history.put(Constants.HISTORY__TO, (receiver.equals(to) ?
+                    receiver : "anonymous"));
                 history.put(Constants.HISTORY__TIMESTAMP, rs.getTimestamp(Constants.HISTORY__TIMESTAMP));
             }
 
