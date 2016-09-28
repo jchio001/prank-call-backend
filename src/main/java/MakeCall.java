@@ -112,7 +112,7 @@ public class MakeCall {
                     "trial_call__daily_call_cntr + 1, trial_call__total_cnt = trial_call__total_cnt + 1 WHERE trial_call__ip_addr = ? ";
 
             } else {
-                updateSQL = "UPDATE trial_call SET trial_call__last_call = CURRENT_TIMESTAMP, trial_call__daily_cntr = 1, , trial_call__total_cnt = " +
+                updateSQL = "UPDATE trial_call SET trial_call__last_call = CURRENT_TIMESTAMP, trial_call__daily_cntr = 1, trial_call__total_cnt = " +
                     "trial_call__total_cnt + 1 WHERE trial_call__ip_addr = ?";
             }
             makeCall(receiverNumber);
@@ -120,8 +120,8 @@ public class MakeCall {
             stmt.setString(1, ipAddr);
             stmt.executeUpdate();
         } else {
-            String insertSQL = "INSERT into trial_call(trial_call__ip_addr, trial_call__last_call, trial_call__daily_call_cntr) VALUES " +
-                "(?, CURRENT_TIMESTAMP, 1)";
+            String insertSQL = "INSERT into trial_call(trial_call__ip_addr, trial_call__last_call, trial_call__daily_call_cntr, " +
+                "trial_call__total_cnt) VALUES (?, CURRENT_TIMESTAMP, 1, 1)";
             stmt = connection.prepareStatement(insertSQL);
             stmt.setString(1, ipAddr);
             stmt.executeUpdate();
