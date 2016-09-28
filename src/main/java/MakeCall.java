@@ -14,6 +14,7 @@ import java.sql.*;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class MakeCall {
     public static void makeCall(HttpServletRequest req, HttpServletResponse resp, Connection connection, JSONObject jsonObject)
@@ -59,11 +60,13 @@ public class MakeCall {
                     updateSQL = "Update account set account__last_call = CURRENT_TIMESTAMP, account__daily_call_cntr " +
                         "= account__daily_call_cntr + 1, account__total_cnt = account__total_cnt + 1 WHERE account__id = ?";
                 }
+
+                int callType = new Random().nextInt(3) + 1;
                 stmt = connection.prepareStatement(updateSQL);
                 stmt.setLong(1, accountId);
-                makeCall(receiverNumber);
+                makeCall(receiverNumber, callType);
                 stmt.executeUpdate();
-                updateHistory(connection, fromNumber, receiverNumber, today);
+                updateHistory(connection, fromNumber, receiverNumber, today, callType);
             } else {
                 throw new JSONException("Account doesn't exist");
             }
@@ -73,7 +76,7 @@ public class MakeCall {
         }
     }
 
-    public static void makeCall(String receiverNumber) throws TwilioRestException {
+    public static void makeCall(String receiverNumber, int callType) throws TwilioRestException {
         TwilioRestClient client = new TwilioRestClient(Constants.ACCOUNT_SID, Constants.AUTH_TOKEN);
         Account account = client.getAccount();
         CallFactory callFactory = account.getCallFactory();
@@ -81,7 +84,15 @@ public class MakeCall {
         callParams.put(Constants.TO, receiverNumber);
         callParams.put(Constants.FROM, Constants.FROM_NUMBER);
         callParams.put(Constants.METHOD, Constants.GET);
-        callParams.put(Constants.URL, "https://handler.twilio.com/twiml/EH97f8c542503bea156b00ab7ad72adc42");
+
+        if (callType == 1) {
+            callParams.put(Constants.URL, "https://handler.twilio.com/twiml/EH97f8c542503bea156b00ab7ad72adc42");
+        } else if (callType == 2) {
+            callParams.put(Constants.URL, "https://handler.twilio.com/twiml/EH2d787ed2421b6162139dbdfd34f7624b");
+        } else {
+            callParams.put(Constants.URL, "https://handler.twilio.com/twiml/EH49c285a8b443675720bfe09d4a844cf1");
+        }
+
         Call call = callFactory.create(callParams);
     }
 
@@ -115,27 +126,35 @@ public class MakeCall {
                 updateSQL = "UPDATE trial_call SET trial_call__last_call = CURRENT_TIMESTAMP, trial_call__daily_cntr = 1, trial_call__total_cnt = " +
                     "trial_call__total_cnt + 1 WHERE trial_call__ip_addr = ?";
             }
-            makeCall(receiverNumber);
+
+            int callType = new Random().nextInt(3) + 1;
             stmt = connection.prepareStatement(updateSQL);
             stmt.setString(1, ipAddr);
+
+            makeCall(receiverNumber, callType);
             stmt.executeUpdate();
+            updateHistory(connection, ipAddr, receiverNumber, today, callType);
         } else {
+            int callType = new Random().nextInt(3) + 1;
             String insertSQL = "INSERT into trial_call(trial_call__ip_addr, trial_call__last_call, trial_call__daily_call_cntr, " +
                 "trial_call__total_cnt) VALUES (?, CURRENT_TIMESTAMP, 1, 1)";
             stmt = connection.prepareStatement(insertSQL);
             stmt.setString(1, ipAddr);
+
+            makeCall(receiverNumber, callType);
             stmt.executeUpdate();
-            makeCall(receiverNumber);
-            updateHistory(connection, ipAddr, receiverNumber, today);
+            updateHistory(connection, ipAddr, receiverNumber, today, callType);
         }
     }
 
-    public static void updateHistory(Connection connection, String from, String to, Date date) throws SQLException {
-        String insertSQL = "INSERT into history(history__from, history__to, history__timestamp) VALUES(?, ?, ?)";
+    public static void updateHistory(Connection connection, String from, String to, Date date, int callType) throws SQLException {
+        String insertSQL = "INSERT into history(history__from, history__to, history__timestamp, " +
+            "history__call_type) VALUES(?, ?, ?, ?)";
         PreparedStatement stmt = connection.prepareStatement(insertSQL);
         stmt.setString(1, from);
         stmt.setString(2, to);
         stmt.setTimestamp(3, new Timestamp(date.getTime()));
+        stmt.setInt(4, callType);
         stmt.executeUpdate();
     }
 }
