@@ -11,17 +11,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class GetHistory {
-    public static void getHistory(HttpServletRequest req, HttpServletResponse resp, Connection connection, String from, String to)
-        throws IOException {
+    public static void getHistory(HttpServletRequest req, HttpServletResponse resp, Connection connection, String from,
+                                  String to, int offset) throws IOException {
         try {
             String historySQL = "SELECT history__from, history__to, history__timestamp from history WHERE history__from = ?" +
-                (!to.equals("") ? "OR history__to = ?" : "") + "ORDER BY history__timestamp DESC LIMIT 10";
+                (!to.equals("") ? "OR history__to = ?" : "") + "ORDER BY history__timestamp DESC OFFSET ? LIMIT 10";
             PreparedStatement stmt = connection.prepareStatement(historySQL);
             if (to.equals("")) {
                 stmt.setString(1, from);
+                stmt.setInt(2, offset);
             } else {
                 stmt.setString(1, from);
                 stmt.setString(2, to);
+                stmt.setInt(3, offset);
             }
             ResultSet rs = stmt.executeQuery();
 
