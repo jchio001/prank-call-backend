@@ -15,7 +15,7 @@ public class Login {
         try {
             String number = jsonObject.getString(Constants.PHONE_NUMBER);
             String password = jsonObject.getString(Constants.PASSWORD);
-            String loginQuery = "Select account__id, account__active FROM account WHERE account__phone_number = ? and " +
+            String loginQuery = "Select account__id, account__active, account__subbed FROM account WHERE account__phone_number = ? and " +
                 "account__password = ? LIMIT 1";
             PreparedStatement stmt = connection.prepareStatement(loginQuery);
             stmt.setString(1, number);
@@ -25,6 +25,7 @@ public class Login {
                 JSONObject loginData = new JSONObject();
                 loginData.put(Constants.ID, rs.getLong(Constants.ACCOUNT__ID));
                 loginData.put(Constants.ACCOUNT__ACTIVE, rs.getBoolean(Constants.ACCOUNT__ACTIVE));
+                loginData.put(Constants.ACCOUNT__SUBBED, rs.getBoolean(Constants.ACCOUNT__SUBBED));
                 resp.getWriter().print(loginData.toString());
             } else
                 throw new JSONException(Constants.INVALID_CREDENTIALS);
