@@ -81,7 +81,7 @@ public class MakeCall {
         callParams.put(Constants.TO, receiverNumber);
         callParams.put(Constants.FROM, Constants.FROM_NUMBER);
         callParams.put(Constants.METHOD, Constants.GET);
-        callParams.put(Constants.URL, "https://handler.twilio.com/twiml/EH3b3ebb50bfabbab6501e601e99655500");
+        callParams.put(Constants.URL, "https://handler.twilio.com/twiml/EH97f8c542503bea156b00ab7ad72adc42");
         Call call = callFactory.create(callParams);
     }
 
