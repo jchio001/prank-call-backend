@@ -78,7 +78,7 @@ public class Main extends HttpServlet {
                     }
 
                     if (mode == null) {
-                        mode = Constants.REFRESH_MODE;
+                        mode = Constants.LOAD_MODE;
                     }
 
                     if (from != null)
