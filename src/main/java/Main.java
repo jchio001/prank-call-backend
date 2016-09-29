@@ -66,18 +66,24 @@ public class Main extends HttpServlet {
                 } else if (pathPieces[1].equals("history")) {
                     String from = request.getParameter("from");
                     String to = request.getParameter("to");
-                    int offset;
+                    String mode = request.getParameter("mode");
+                    long timestamp;
+
                     try {
-                        offset = Integer.parseInt(request.getParameter("offset"));
+                        timestamp = Long.parseLong(request.getParameter("timestamp"));
                     } catch(NumberFormatException e) {
                         response.setStatus(Constants.BAD_REQUEST);
                         response.getWriter().print(getStackTrace(e));
                         return;
                     }
 
+                    if (mode == null) {
+                        mode = Constants.REFRESH_MODE;
+                    }
+
                     if (from != null)
                         GetHistory.getHistory(request, response, connection, from,
-                            (to != null ? to : ""),  offset);
+                            (to != null ? to : ""),  mode, timestamp);
                 }
             }
         } catch (Exception e) {

@@ -43,6 +43,9 @@ public class Constants {
     public static final String HISTORY__TIMESTAMP = "history__timestamp";
     public static final String TOTAL = "total";
 
+    //HISTORY MODE
+    public static final String LOAD_MODE = "load";
+    public static final String REFRESH_MODE = "refresh";
 
     //ERROR MESSAGES
     public static final String INVALID_CREDENTIALS = "Invalid credentials.";

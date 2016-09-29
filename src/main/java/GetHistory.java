@@ -5,25 +5,23 @@ import org.json.JSONObject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class GetHistory {
     public static void getHistory(HttpServletRequest req, HttpServletResponse resp, Connection connection, String from,
-                                  String to, int offset) throws IOException {
+                                  String to, String mode, long timestamp) throws IOException {
         try {
             String historySQL = "SELECT history__from, history__to, history__timestamp from history WHERE history__from = ?" +
-                (!to.equals("") ? "OR history__to = ?" : "") + "ORDER BY history__timestamp DESC OFFSET ? LIMIT 10";
+                (!to.equals("") ? "OR history__to = ?" : "") + "AND history__timestamp < ?" +
+                (mode.equals(Constants.LOAD_MODE) ? " LIMIT 10" : "");
             PreparedStatement stmt = connection.prepareStatement(historySQL);
             if (to.equals("")) {
                 stmt.setString(1, from);
-                stmt.setInt(2, offset);
+                stmt.setTimestamp(2, new Timestamp(timestamp));
             } else {
                 stmt.setString(1, from);
                 stmt.setString(2, to);
-                stmt.setInt(3, offset);
+                stmt.setTimestamp(3, new Timestamp(timestamp));
             }
             ResultSet rs = stmt.executeQuery();
 
