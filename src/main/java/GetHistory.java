@@ -14,7 +14,7 @@ public class GetHistory {
             String historySQL = "SELECT history__from, history__to, history__timestamp from history WHERE (history__from = ?" +
                 (!to.equals("") ? "OR history__to = ?" : "") + ") AND history__timestamp " +
                 (mode.equals(Constants.LOAD_MODE) ? "<" : ">") + " ?" +
-                (mode.equals(Constants.LOAD_MODE) ? " LIMIT 10" : "");
+                (mode.equals(Constants.LOAD_MODE) ? " LIMIT 10" : "") + " ORDER BY history__timestamp DESC";
             PreparedStatement stmt = connection.prepareStatement(historySQL);
             if (to.equals("")) {
                 stmt.setString(1, from);
