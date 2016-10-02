@@ -38,7 +38,6 @@ public class CreateAccount {
             stmt.setString(1, phoneNumber);
             stmt.setString(2, password);
             stmt.setInt(3, confirmKey);
-            resp.getWriter().print(executeQueryGetId(stmt, resp));
 
             TwilioRestClient client = new TwilioRestClient(Constants.ACCOUNT_SID, Constants.AUTH_TOKEN);
             List<org.apache.http.NameValuePair> params = new ArrayList<>();
@@ -48,6 +47,7 @@ public class CreateAccount {
 
             MessageFactory messageFactory = client.getAccount().getMessageFactory();
             Message msg = messageFactory.create(params);
+            resp.getWriter().print(executeQueryGetId(stmt, resp));
         } catch (JSONException e) {
             resp.setStatus(Constants.BAD_REQUEST);
             resp.getWriter().write(Main.getStackTrace(e));
